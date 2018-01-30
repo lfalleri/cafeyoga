@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="cafeyoga">
+<meta charset="ISO-8859-1">
+<head>
+  <title>Cafe Yoga</title>
+
+  <base href="/" />
+
+  {% include 'cafeyoga/stylesheets.html' %}
+</head>
+{% load static %}
+{% load staticfiles %}
+<body>
+
+    <div class="ng-view">
+
+    </div>
+
+  {% include 'cafeyoga/javascripts.html' %}
+</body>
+</html>

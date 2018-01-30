@@ -1,0 +1,216 @@
+{% load staticfiles %}
+.landingpage-container-square{
+  width: 100%;
+  #padding : 0 20% 0 20%;
+  background: #eaecef;
+}
+
+.flex-container{
+  padding: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  max-height:50%;
+}
+
+.flex-column{
+  padding: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+}
+.flex-column > *{
+  flex: 1 100%;
+}
+
+.links-container{
+  padding: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+}
+
+.icons-container{
+  padding: 30% 0 0 0;
+  align-self: flex-end;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.icons-container > *{
+  padding: 5%;
+}
+
+.landingpage-container-square:after {
+  content: "";
+  display: block;
+  text-align: center;
+}
+
+.landingpage-link{
+   color: #3F3F3F;
+   padding: 15% 0 0 0;
+   font-family:"Handlee";
+   font-size: 150%;
+   /*-webkit-transition: color 0.5s, font-size 0.5s;
+   -moz-transition: color 0.5s, font-size 0.5s;
+   -o-transition: color 0.5s, font-size 0.5s;
+   transition: color 0.5s, font-size 0.5s;*/
+   cursor: pointer;
+   text-decoration: none;
+}
+
+.landingpage-link:hover{
+   color: #137b72;
+   /*font-size: 200%;*/
+   text-decoration: none;
+}
+
+.personal-space-link{
+   color: #3F3F3F;
+   max-height: 30%;
+   padding: 20% 0 10% 0;
+   font-family:"PT Sans";
+   font-size: 300%;
+   -webkit-transition: color 1s, font-size 1s;
+   -moz-transition: color 1s, font-size 1s;
+   -o-transition: color 1s, font-size 1s;
+   transition: color 1s, font-size 1s;
+   cursor: pointer;
+   text-decoration: none;
+}
+
+.personal-space-link:hover{
+   color: #137b72;
+   font-size: 300%;
+   text-decoration: none;
+}
+.personal-space-link:visited{
+   text-decoration: none;
+}
+
+.personal-space-link:active{
+   color: red;
+   text-decoration: none;
+}
+
+
+.mentions-link{
+   color: #3F3F3F;
+   font-family:"Bellefair";
+   font-size:115%;
+}
+
+.mentions-link:hover{
+   color: #137b72;
+}
+
+.landingpage-footer{
+   margin:25% 0 0 0;
+   float: bottom;
+}
+
+.top{
+   float: top;
+   margin:0 0 5% 0;
+}
+
+.bottom{
+  float: bottom;
+  margin:5% 0 0 0;
+}
+
+.left{
+  float: left;
+  margin:0;
+
+}
+.right{
+  float: right;
+  margin:0;
+}
+
+.center{
+   text-align:center;
+   margin:0 auto;
+}
+
+.portfolio-item {
+  #margin:5% 0 5% 0;
+  width: 35%;
+  height: 35%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  }
+  .portfolio-item .portfolio-link {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    text-align: center;
+    cursor: pointer;
+    -webkit-transition: all ease 0.5s;
+    -moz-transition: all ease 0.5s;
+    transition: all ease 0.5s;}
+
+    .portfolio-item .portfolio-link:hover .portfolio-hover{
+        border-style: groove;
+        opacity: 1;
+    }
+
+    .portfolio-item .portfolio-link .portfolio-hover {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-transition: all ease 0.5s;
+      -moz-transition: all ease 0.5s;
+      transition: all ease 0.5s;
+      opacity: 0;
+      background: rgba(146, 154, 168, 0.9); }
+      .portfolio-item .portfolio-link .portfolio-hover:hover {
+        border-style: groove;
+        opacity: 1;}
+
+       .portfolio-item .portfolio-link:hover .portfolio-centered{
+          color: #36383d;
+       }
+
+      .portfolio-item .portfolio-link .portfolio-centered{
+         position: absolute;
+         font-family: Lobster;
+         font-size: 400%;
+         font-weight: bolder;
+         color: #137b72;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         -webkit-transition: all ease 0.5s;
+         -moz-transition: all ease 0.5s;
+         transition: all ease 0.5s;}
+
+      .portfolio-item .portfolio-link img{
+        max-width: 100%;
+        max-height: 100%; }
+
+
+#collections * {
+  z-index: 2; }
+
+

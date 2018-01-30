@@ -1,0 +1,46 @@
+.yoga-panel-container{
+   padding-top: 8%;
+   font-family: "Allan";
+}
+
+.yoga-panel{
+   width : 100%;
+   height : 100%;
+   font-family: "Lobster";
+}
+.yoga-panel{
+   font-family: "Lobster";
+   font-size: 100%;
+}
+.yoga-panel > h2{
+   font-family: "Handlee";
+   font-size: 150%;
+}
+
+.yoga-panel > h1{
+   font-family: "Handlee";
+   font-size: 150%;
+}
+
+.yoga-user-info{
+   width : 100%;
+   height : 100%;
+}
+.yoga-user-info h2{
+   font-family: "Handlee";
+   font-size: 150%;
+}
+.yoga-user-info a{
+   font-family: "Handlee";
+   font-size: 150%;
+}
+.yoga-user-info a:hover{
+   color: red;
+}
+yoga-user-info > button{
+   font-family: "Allan";
+}
+
+.container-fluid{
+   padding: 0;
+}

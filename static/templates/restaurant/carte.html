@@ -1,0 +1,100 @@
+<div ng-include="'/static/templates/general/navbar.html'"></div>
+
+<header class="masthead">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in">Carte</div>
+            <div class="intro-heading"></div>
+        </div>
+    </div>
+</header>
+
+<section class="text-container">
+    <div class="container" id="carte">
+
+        <div style="padding-bottom: 2%;" ng-repeat="(categorie, obj) in menu">
+            <div  class="restaurant-categorie">
+                <h1>
+                    {{categorie}}:
+                </h1>
+            </div>
+
+            <div  ng-repeat="(type, rest) in obj">
+                <div class="restaurant-specificite">
+                    {{type}}
+                </div>
+
+                <div ng-repeat="(desc, rest) in rest">
+                    <div class="restaurant-plat">
+                        {{ rest[0] }} :
+                    </div>
+                    <div  class="restaurant-details-row">
+                        <div class="restaurant-plat-ingredients">
+                            {{ rest[1] }}
+                        </div>
+                        <div class="restaurant-plat-prix right">
+                            {{ rest[2] }}€
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding-bottom: 2%;" ng-repeat="(categorie, obj) in desserts">
+            <div  class="restaurant-categorie">
+                <h1>
+                    {{categorie}}:
+                </h1>
+            </div>
+
+            <div  ng-repeat="(type, rest) in obj">
+                <div class="restaurant-specificite">
+                    {{type}}
+                </div>
+
+                <div ng-repeat="(desc, rest) in rest">
+                    <div class="restaurant-plat">
+                        {{ rest[0] }} :
+                    </div>
+                    <div  class="restaurant-details-row">
+                        <div class="restaurant-plat-ingredients">
+                            {{ rest[1] }}
+                        </div>
+                        <div class="restaurant-plat-prix right">
+                            {{ rest[2] }}€
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if='brunchs'>
+            <div style="margin-top: 8%; " class="restaurant-categorie"><h1>Brunch</h1></div>
+
+            <div style="margin-bottom:3%;" ng-repeat="brunch in brunchs">
+                <div  class="brunch-flex-row">
+                    <div class="restaurant-specificite">
+                        {{brunch["titre"]}}
+                    </div>
+                    <div class="restaurant-plat-prix">
+                        {{ brunch ["prix"]}} €
+                    </div>
+                </div>
+                <div class="restaurant-plat-ingredients">
+                    {{brunch["didascalie"]}}
+                </div>
+                <div ng-repeat="item in brunch['items']">
+                    <div class="restaurant-plat">
+                        {{ item }}
+                    </div>
+                </div>
+                <div ng-if="brunch['options'].length > 0">
+                  <div class="brunch-options">Options</div>
+                  <div ng-repeat="option in brunch['options']">
+                      <div class="restaurant-plat">
+                          {{ option[0] }} / {{ option[1] }} €
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
