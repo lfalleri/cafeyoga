@@ -1,43 +1,132 @@
-<div class="row">
-  <div class="col-md-4 col-md-offset-4">
-    <h1>Mon compte</h1>
+<div ng-include="'/static/templates/general/navbar.html'"></div>
 
-    <div class="well">
-      <h2>Bonjour {{account.first_name}} ! </h2>
-      <p>Votre crédit est de {{account.credits}} points</p>
-      <p>Vous pouvez mettre à jour votre profil : </p>
-      <form role="form" ng-submit="vm.update()">
-        <div class="form-group">
-          <label for="update__email">Email</label>
-          <input type="email" class="form-control" id="update__email" ng-model="vm.email" placeholder={{account.email}} />
+<section class="text-container" style="margin-top:10%;">
+    <h2>Bonjour {{account.first_name}} ! </h2>
+    <h4>Votre crédit est de {{account.credits}} points</h4>
+    <h4>Vous pouvez mettre à jour votre profil : </h4>
+
+    <form role="form" class="update-account-form" ng-submit="updateProfile()">
+        <div  style="font-size:30px; border: 1px solid red; background-color : #f2f2f2; color:red; min-width:100%;"
+           class="alert alert-danger" ng-show="error" ng-bind="error">
         </div>
-
-        <div class="form-group">
-          <label for="update__first_name">Prenom</label>
-          <input type="text" class="form-control" id="update__first_name" ng-model="vm.first_name" placeholder={{account.first_name}} />
+        <div style="font-size:30px; border: 1px solid green; background-color : #f2f2f2; color:green; max-width:70%;"
+           class="alert alert-danger" ng-show="success" ng-bind="success">
         </div>
-
-        <div class="form-group">
-          <label for="update__last_name">Nom</label>
-          <input type="text" class="form-control" id="update__last_name" ng-model="vm.last_name" placeholder={{account.last_name}} />
+        <div class="form-group settings-form">
+            <label for="settings_nom">Nom *</label>
+            <input style="font-family:'Poiret One'; font-size:20px;"
+                   name="nom"
+                   type="text"
+                   class="form-control"
+                   id="settings_nom"
+                   ng-model="updateProfileFields.first_name"
+                   ng-required="1"
+                   placeholder="Nom *"
+                   validate-on="submit"
+                   oninvalid="this.setCustomValidity('Champ obligatoire')"
+                   oninput="setCustomValidity('')"
+                   ng-change="changeForm()"/>
         </div>
-
-        <div class="form-group">
-          <label for="update__password">Mot de passe</label>
-          <input type="password" class="form-control" id="update__password" ng-model="vm.password" placeholder="" />
+        <div class="form-group settings-form">
+        <label for="settings_prenom">Prénom *</label>
+            <input style="font-family:'Poiret One'; font-size:20px;"
+                   name="prenom"
+                   type="text"
+                   class="form-control"
+                   id="settings_prenom"
+                   ng-model="updateProfileFields.last_name"
+                   ng-required="1"
+                   placeholder="Prénom *"
+                   validate-on="submit"
+                   oninvalid="this.setCustomValidity('Champ obligatoire')"
+                   oninput="setCustomValidity('')"
+                   ng-change="changeForm()"/>
         </div>
-
-        <div class="form-group">
-          <label for="update__confirm_password">Confirmer votre mot de passe</label>
-          <input type="password" class="form-control" id="update__confirm_password" ng-model="vm.confirm_password" placeholder="" />
+        <div class="form-group settings-form">
+        <label for="settings_email">Email *</label>
+            <input style="font-family:'Poiret One'; font-size:20px;"
+                   name="email"
+                   type="email"
+                   class="form-control"
+                   id="settings_email"
+                   ng-model="updateProfileFields.email"
+                   ng-required="1"
+                   placeholder="Email *"
+                   oninvalid="this.setCustomValidity('Champ obligatoire')"
+                   oninput="setCustomValidity('')"
+                   ng-change="changeForm()"/>
         </div>
-
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <div class="form-group settings-form">
+            <label for="settings_password1">Mot de passe</label>
+            <input style="font-family:'Poiret One'; font-size:20px;"
+                   name="email"
+                   type="password"
+                   class="form-control"
+                   id="settings_password1"
+                   ng-model="updateProfileFields.password"
+                   ng-required="1"
+                   placeholder="Mot de passe *"
+                   oninvalid="this.setCustomValidity('Champ obligatoire')"
+                   oninput="setCustomValidity('')"
+                   ng-change="changeForm()"/>
         </div>
-      </form>
+        <div class="form-group settings-form">
+            <label for="settings_password2">Confirmer votre mot de passe</label>
+            <input style="font-family:'Poiret One'; font-size:20px;"
+                   name="email"
+                   type="password"
+                   class="form-control"
+                   id="settings_password2"
+                   ng-model="updateProfileFields.confirmation_password"
+                   ng-required="1"
+                   placeholder="Confirmer votre mot de passe *"
+                   oninvalid="this.setCustomValidity('Champ obligatoire')"
+                   oninput="setCustomValidity('')"
+                   ng-change="changeForm()"/>
+        </div>
+        <div class="form-group">
+           <button type="submit" class="button-type-submit btn btn-primary">Mettre à jour</button>
+        </div>
+    </form>
+</section>
+<section class="text-container">
+    <h2> Votre historique de cours</h2>
+    <div class="row">
+        <div class="">
+            <table style="margin-top: 3%; width:100%;">
+                <td class="table-header"> Type </td>
+                <td class="table-header"> Animateur </td>
+                <td class="table-header"> Jour </td>
+                <td class="table-header"> Heure </td>
+                <td class="table-header"> Durée </td>
+                <td class="table-header"> Nb de personnes </td>
+                <td class="table-header"> Présent ? </td>
+                <td class="table-header"> Annulation </td>
+                <tr style="padding:5%" ng-class="{'lesson-finished': lesson.meta.finished}" ng-repeat="lesson in reservedLessonsForAccount">
+                    <td> {{ lesson.type }} {{ lesson.intensity }}</td>
+                    <td> {{ lesson.animator.prenom }} {{ lesson.animator.nom }} </td>
+                    <td> {{ lesson.meta.day }} </td>
+                    <td> {{ lesson.meta.start }} </td>
+                    <td> {{ lesson.duration }} min</td>
+                    <td> {{ lesson.meta.nb_persons }} </td>
+                    <td>
+                        <md-checkbox style="vertical-align:middle;"
+                                     ng-model="lesson.meta.present"
+                                     ng-disabled="true"
+                                     ng-checked="lesson.meta.present"
+                                     aria-label="Présent ?">
+                        </md-checkbox>
+                    </td>
+                    <td>
+                        <a ng-if="!lesson.meta.finished">
+                            <md-icon md-font-icon="material-icons"
+                                     ng-click="cancelReservation(lesson, account)">
+                                delete
+                            </md-icon>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+</section>
 
-    </div>
-
-  </div>
-</div>
+<div ng-include="'/static/templates/general/footer.html'"></div>

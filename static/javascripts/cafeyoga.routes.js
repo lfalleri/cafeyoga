@@ -24,10 +24,26 @@
       controller: 'SettingsController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/authentication/settings.html'
-    }).when('/yoga', {
+    }).when('/yoga/recharge', {
+      controller: 'RechargeController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/recharge.html'
+    }).when('/yoga/calendrier', {
       controller: 'YogaController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/yoga/calendar.html'
+    }).when('/yoga/reservation', {
+      controller: 'YogaReservationController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/reservation.html'
+    }).when('/yoga/annulation', {
+      controller: 'YogaCancellationController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/cancellation.html'
+    }).when('/yoga/professeurs', {
+      controller: 'YogaAnimatorsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/animateurs.html'
     }).when('/presentation',{
       controller: 'LandingPageController',
       controllerAs: 'vm',
@@ -41,9 +57,13 @@
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/notrecharte.html'
     }).when('/carte',{
-      controller: 'RestaurantController',
+      controller: 'CarteController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/carte.html'
+    }).when('/restaurant/reservation',{
+      controller: 'RestaurantController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/restaurant/reservation.html'
     }).when('/',{
       controller: 'LandingPageController',
       controllerAs: 'vm',

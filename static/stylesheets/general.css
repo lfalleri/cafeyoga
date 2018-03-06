@@ -23,22 +23,56 @@
     }
    #mainNav .navbar-brand .navbar-logo{
      content: url("/static/img/logo-flat.png");
-     max-width: 50%;
+     width: 50%;
      height: auto;}
   #mainNav .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
       color:  #595959; }
 
-  #mainNav > .dropdown-menu {
+  /*#mainNav > .dropdown-menu {
     position: relative;
   }
 
   #mainNav > .dropdown-menu {
    top:0;
-   left:100%;
+   left:0;
    margin-top:-6px;
    margin-left:-1px;
    display: none;
-  }
+  }*/
+
+.dropdown {
+    position: relative;
+    display: block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f2f2f2;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(19,123,114,0.2);
+    z-index: 1;
+    padding : 0;
+}
+
+.dropdown-content li {
+    color: #3f3f3f;
+    padding: 12px 0px;
+    text-decoration: none;
+    display: inline;
+}
+
+.nav-item:hover .nav-item{
+   float: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropdown-link {
+   /* background-color: #137b72;*/
+}
 
   #mainNav .navbar-nav ul{
      display: none;
@@ -67,8 +101,8 @@
 
 @media (min-width: 992px) {
   #mainNav {
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     -webkit-transition: padding-top 0.3s, padding-bottom 0.3s;
     -moz-transition: padding-top 0.3s, padding-bottom 0.3s;
     transition: padding-top 0.3s, padding-bottom 0.3s;
@@ -108,10 +142,9 @@
         width: 30%;
         height: auto;}
         #mainNav.navbar-shrink .navbar-brand .navbar-logo{
-            position: relative;
-            float: top;
             content: url("/static/img/logo-flat.png");
-            width: 50%;}}
+            max-width: 40%;
+            height: auto;}}
 
 .general-header{
     background: #eaecef;
@@ -192,12 +225,18 @@
  * Copyright 2013-2017 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-agency/blob/master/LICENSE)
  */
+html{
+   background-color: #f2f2f2;
+
+}
+html, body {height: 100%; }
+
 body {
+  background-color: #f2f2f2;
   overflow-x: hidden;
   font-family: 'Poiret One', sans-serif;
   -webkit-tap-highlight-color: #9e873d;
   text-align: justify;
-  background-color: #f2f2f2;
   }
 
 .navbar-light{
@@ -227,13 +266,18 @@ a {
 
 h1,
 h2,
-h3,
+h3 {
+  font-weight: 700;
+  font-family: 'Poiret One', sans-serif;
+  text-transform: uppercase;
+}
+
 h4,
 h5,
 h6 {
-  font-weight: 700;
+  font-weight: 500;
   font-family: 'Poiret One', sans-serif;
-  text-transform: uppercase; }
+  text-transform: none; }
 
 section {
   background-color: #f2f2f2;
@@ -705,4 +749,66 @@ footer {
   max-height:50%;
   width: 50%;
   height: 50%;
+}
+
+.update-account-form{
+   max-width:50%;
+}
+
+.text-centered{
+   text-align : center;
+}
+
+.flexible-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.flexible-col{
+  display: flex;
+  flex-direction: col;
+  flex-wrap: wrap;
+}
+
+.button-flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+
+.button-flex-col{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.button-flex-col .button-type-submit{
+  margin: auto;
+  margin-top:2%;
+  white-space: normal;
+  font-family:'Poiret One';
+  max-width: 50%;
+  font-size:25px;
+  color:#3f3f3f;
+  background-color:#137b72;
+}
+
+
+.text-container .button-type-submit{
+  margin: auto;
+  margin-top:2%;
+  white-space: normal;
+  font-family:'Poiret One';
+  max-width: 50%;
+  font-size:25px;
+  color:#3f3f3f;
+  background-color:#137b72;
+}
+
+.settings-form{
+  max-width : 70%;
 }

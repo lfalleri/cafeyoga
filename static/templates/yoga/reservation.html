@@ -1,0 +1,92 @@
+<div ng-include="'/static/templates/general/navbar.html'"></div>
+
+
+
+
+<section class="text-container" style="margin-top: 3%;">
+    <div class="pending-reservation">
+
+        <h2 style="text-align: center;">Bonjour {{  account.first_name }} {{  account.last_name }}</h2><br><br>
+        <div ng-if="!reservationSuccessful">
+            <div class="pending-reservation-flex-row">
+                <div style="width:40%;">
+                    <h2 style="text-align: center;">Votre cours :</h2>
+                    <div class="pending-reservation-lesson" >
+                        <h2 class="pending-reservation-lesson-detail" style="font-weight: 900;">{{ lesson.type }} {{ lesson.intensity }} </h2>
+                        <h3 class="pending-reservation-lesson-detail" > Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h3>
+                        <h3 class="pending-reservation-lesson-detail" >{{ meta.day}} à {{meta.start}}</h3>
+                        <h3 class="pending-reservation-lesson-detail" >Durée : {{meta.duration}} minutes</h3>
+                        <h3 class="pending-reservation-lesson-detail" >Places restantes : {{ lesson.nb_places }}</h3>
+                    </div>
+                </div>
+
+                <div  style="width:30%;">
+                    <h2 style="text-align: center;">Votre réservation :</h2>
+                    <div class="pending-reservation-lesson">
+                        <table>
+                            <td style="font-weight: bolder;">Solde actuel : </td>
+                            <td style="font-weight: bolder;">{{ account.credits }} </td>
+                            <tr>
+                                <td>Nombre de places réservées : </td>
+                                <td>{{ nb_persons }} </td>
+                            </tr>
+                            <tr>
+                                <td>Prix/personne : </td>
+                                <td>{{ lesson.price }} </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bolder;">Prix total : </td>
+                                <td style="font-weight: bolder;">{{ meta.total_price }} </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bolder;">Solde après réservation : </td>
+                                <td style="font-weight: bolder;">{{ meta.next_credits }} </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10%;" class="button-flex-col pending-reservation-button">
+                <button
+                        type="submit"
+                        ng-click="exitReservation(lesson, account, nb_persons)"
+                        class="button-type-submit btn btn-primary ">
+                    Retour
+                </button>
+                <button
+                        type="submit"
+                        ng-click="processReservation(lesson, account, nb_persons)"
+                        class="button-type-submit btn btn-primary">
+                    Réserver
+                </button>
+            </div>
+        </div>
+        <div ng-if="reservationSuccessful" class="text-centered">
+            <h2>Nous vous remercions pour votre réservation !</h2>
+            <h4>Vous êtes maintenant inscrit(e) au cours suivant :</h4>
+            <h4>{{ lesson.type }} {{ lesson.intensity }}</h4>
+            <h4>Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h4>
+            <h4>{{ meta.day}} à {{meta.start}} (durée : {{meta.duration}})</h4>
+            <h4 ng-if="nb_persons > 1">Inscription pour {{ nb_persons }} personnes</h4>
+            <h4 ng-if="nb_persons==1">Inscription pour {{ nb_persons }} personne</h4>
+            <div style="margin-top: 10%;" class="button-flex-col pending-reservation-button">
+                <button type="submit"
+                        ng-click="exitReservation(lesson, account, nb_persons)"
+                        class="button-type-submit btn btn-primary ">
+                    Retour
+                </button>
+                <button style="min-width: 50%; max-width: 100%;"
+                        type="submit"
+                        ng-click="cancelReservation(lesson, account)"
+                        class="button-type-submit btn btn-primary">
+                    Annuler la réservation
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<div ng-include="'/static/templates/general/footer.html'"></div>

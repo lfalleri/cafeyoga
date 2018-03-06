@@ -3,6 +3,8 @@
 
   var app = angular
     .module('cafeyoga', [
+      'ngMaterial',
+      'ngMessages',
       'cafeyoga.config',
       'cafeyoga.routes',
       'cafeyoga.authentication',
@@ -32,16 +34,13 @@
      $http.defaults.xsrfHeaderName = 'X-CSRFToken';
      $http.defaults.xsrfCookieName = 'csrftoken';
 
-
      var history = [];
      $rootScope.$on('$routeChangeSuccess', function() {
         history.push($location.$$path);
-        console.log("history : ", history);
      });
      $rootScope.back = function () {
         var prevUrl = history.length > 1 ? history.splice(-2)[0] : "/";
-       console.log("prevUrl : ", prevUrl);
-       $location.path(prevUrl);
+        $location.path(prevUrl);
      };
 
    }
@@ -49,6 +48,11 @@
   app.filter('isEmpty', [function() {
     return function(object) {
        return angular.equals({}, object);
+    }
+  }]);
+  app.filter('isEmptyArray', [function() {
+    return function(object) {
+       return angular.equals([], object);
     }
   }]);
 

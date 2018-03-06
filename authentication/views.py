@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import permissions, viewsets, status, views
 from rest_framework.response import Response
-from authentication.models import Account
+from authentication.models import Account, AccountManager
 from authentication.permissions import IsAccountOwner
 from authentication.serializers import AccountSerializer, FullAccountSerializer
 
@@ -78,21 +78,99 @@ class FullAccountView(views.APIView):
 
     def post(self, request, format=None):
         data = json.loads(request.body)
-
         email = data.get('email', None)
-
-        print("FullAccountView() -> email : %s"% email)
         account = Account.objects.get(email=email)
-        print("FullAccountView() -> account : %s"% account)
         if account is not None:
             serialized = FullAccountSerializer(account)
-            print("FullAccountView() -> serialized : %s" % serialized.data)
             return Response(serialized.data)
         else:
             return Response({
                 'status': 'Not Found',
                 'message': 'User not found'
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+class AccountView(views.APIView):
+
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        account_id = data['account_id']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email = data['email']
+        password = data['password']
+
+        account = Account.objects.get(id=account_id)
+        if not account:
+            return Response({
+                'status': 'Not Found',
+                'message': 'This account has not been found.'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        account.first_name = first_name
+        account.last_name = last_name
+        account.email = AccountManager.normalize_email(email)
+        account.set_password(password)
+        account.save()
+        return Response(status.HTTP_200_OK)
+
+    def get(self, request, format=None):
+        first_name = request.query_params['first_name']
+        last_name = request.query_params['last_name']
+        email = request.query_params['email']
+        queryset = []
+
+        if last_name:
+            if first_name:
+                if email:
+                    queryset = Account.objects.filter(last_name__iexact=last_name, first_name__iexact=first_name,email__iexact=email)
+                else:
+                    queryset = Account.objects.filter(last_name__iexact=last_name, first_name__iexact=first_name)
+            else:
+                if email:
+                    queryset = Account.objects.filter(last_name__iexact=last_name, email__iexact=email)
+                else:
+                    queryset = Account.objects.filter(last_name__iexact=last_name)
+        else:
+            if email:
+                if first_name:
+                    queryset = Account.objects.filter(email__iexact=email, first_name__iexact=first_name)
+                else:
+                    queryset = Account.objects.filter(email__iexact=email)
+            elif first_name:
+                queryset = Account.objects.filter(first_name__iexact=first_name)
+            else:
+                queryset = Account.objects.all()
+
+        print("queryset : %s" %queryset )
+
+        if not queryset:
+            print("not queryset : %s" %queryset )
+            if last_name:
+                if first_name:
+                    if email:
+                        queryset = Account.objects.filter(last_name__icontains=last_name, first_name__icontains=first_name,
+                                                          email__iexact=email)
+                    else:
+                        queryset = Account.objects.filter(last_name__icontains=last_name, first_name__icontains=first_name)
+                else:
+                    if email:
+                        queryset = Account.objects.filter(last_name__icontains=last_name, email__icontains=email)
+                    else:
+                        queryset = Account.objects.filter(last_name__icontains=last_name)
+            else:
+                if email:
+                    if first_name:
+                        queryset = Account.objects.filter(email__icontains=email, first_name__icontains=first_name)
+                    else:
+                        queryset = Account.objects.filter(email__icontains=email)
+                elif first_name:
+                    queryset = Account.objects.filter(first_name__icontains=first_name)
+                else:
+                    queryset = Account.objects.all()
+
+        serialized = AccountSerializer(queryset, many=True)
+        return Response(serialized.data)
 
 
 class SettingsView(views.APIView):

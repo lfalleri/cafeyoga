@@ -79,7 +79,7 @@
       var promise = YogaService.getLessons();
       var lessons = [];
       $scope.events = [];
-      var temp_closest_lesson = undefined;
+      var closest_lesson = undefined;
 
 
       promise.then(function(value){
@@ -105,7 +105,7 @@
                else{
                   if ((tmp_event.start - now) < diff_min){
                      diff_min = tmp_event.start - now;
-                     temp_closest_lesson = tmp_event;
+                     closest_lesson = tmp_event;
                   }
                   tmp_event.borderColor = INTENSITY_COLOR[lesson.intensity];
                   tmp_event.backgroundColor = TYPE_COLOR[lesson.type];
@@ -132,11 +132,11 @@
         });
 
         /* Display information about closest next lesson */
-        $scope.description = temp_closest_lesson.panel_description;
-        $scope.start = temp_closest_lesson.start.getHours() + ":"+
-                       (temp_closest_lesson.start.getMinutes() < 10 ? '0' : '') +  temp_closest_lesson.start.getMinutes();
-        $scope.duration = temp_closest_lesson.data.duration;
-        $scope.lesson = temp_closest_lesson.data;
+        $scope.description = closest_lesson.panel_description;
+        $scope.start = closest_lesson.start.getHours() + ":"+
+                       (closest_lesson.start.getMinutes() < 10 ? '0' : '') +  closest_lesson.start.getMinutes();
+        $scope.duration = closest_lesson.data.duration;
+        $scope.lesson = closest_lesson.data;
 
       });
 

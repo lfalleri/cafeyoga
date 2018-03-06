@@ -59,7 +59,7 @@
                         <div class="restaurant-plat-ingredients">
                             {{ rest[1] }}
                         </div>
-                        <div class="restaurant-plat-prix right">
+                        <div class="restaurant-plat-prix">
                             {{ rest[2] }}€
                         </div>
                     </div>
@@ -86,15 +86,42 @@
                         {{ item }}
                     </div>
                 </div>
-                <div ng-if="brunch['options'].length > 0">
-                  <div class="brunch-options">Options</div>
+                <div class="brunch-options" ng-if="brunch['options'].length > 0">
+                  <div class="brunch-options">Options :</div>
                   <div ng-repeat="option in brunch['options']">
                       <div class="restaurant-plat">
-                          {{ option[0] }} / {{ option[1] }} €
+                          {{ option[0] }}  (+ {{ option[1] }} €)
                       </div>
                   </div>
                 </div>
             </div>
         </div>
+
+        <div ng-if='boissons'>
+            <div style="margin-top: 8%; " class="restaurant-categorie"><h1>Boissons</h1></div>
+
+            <!--<div style="padding-bottom: 2%;" ng-repeat="(categorie, boissons_for_categorie) in boissons | orderBy:'categorie':boissonSortFunction">-->
+            <div style="padding-bottom: 2%;" ng-repeat="dict in boissons"><!-- | orderBy:'categorie':boissonSortFunction">-->
+                <div  ng-repeat="(categorie, boissons_for_categorie) in dict">
+                   <div class="restaurant-specificite">
+                     {{categorie}}
+                   </div>
+                   <div ng-repeat="boisson in boissons_for_categorie">
+                       <div class="boisson-row">
+                           <div class="boisson-nom">
+                               {{ boisson[0]}}
+                           </div>
+                           <div class="restaurant-plat-prix">
+                               {{ boisson[1]}}€
+                           </div>
+
+                       </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </section>

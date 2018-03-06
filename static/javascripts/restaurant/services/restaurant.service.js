@@ -21,7 +21,8 @@
     * @desc The Factory to be returned
     */
     var RestaurantService = {
-       getMenu: getMenu,
+       getCarte: getCarte,
+       getConfig: getConfig,
        allReservations : allReservations,
        createReservation : createReservation
     }
@@ -47,24 +48,22 @@
     * @returns {Promise}
     * @memberOf thinkster.reservations.ReservationService
     */
-    function createReservation(lesson, account, callback) {
-      console.log("RestaurantService.createReservation() => ",lesson, account);
+    //function createReservation(date, hour, number_of_persons, name, email, tel, callback) {
+    function createReservation(reservation_info, personal_info) {
+      console.log("RestaurantService.createReservation() => ",reservation_info, personal_info);
+
       return $http.post('api/v1/restaurant/reservation/', {
-        lesson: lesson,
-        account: account
-      }).then(
+        reservation_info: reservation_info,
+        personal_info: personal_info
+      });/*.then(
         function(data, status, headers, config){
 
-          var start = new Date(lesson.date);
-          var message = "Votre réservation a bien été prise en compte pour le cours : \n\n\n\n"+
-                        lesson.type + " - " + lesson.intensity + " - " + lesson.animator +
-                        " - " + start.getHours() + ":"+
-                         (start.getMinutes() < 10 ? '0' : '') +  start.getMinutes() +
-                         " - " + lesson.duration + " minutes";
+          var message = "Votre réservation a bien été prise en compte";
           callback(message);
       },function(data, status, headers, config){
-          callback("Une erreur est survenue lors de la réservation");
-      });
+          console.log(" ICI data : ",data, " status : ", status);
+          callback("Une erreur est survenue lors de la réservation (data : ",data, " status : ", status);
+      });*/
     }
 
 
@@ -74,7 +73,7 @@
     * @returns {object|undefined} Events
     * @memberOf thinkster.reservations.services.Reservations
     */
-    function getMenu() {
+    function getCarte() {
        //var defer = $q.defer();
        return $http.get('/api/v1/restaurant/menu/');//.then(getMenuSuccessFn, getMenuErrorFn);
 
@@ -95,6 +94,10 @@
        function getMenuErrorFn(data, status, headers, config) {
           console.error('getMenu failed : ');
        }
+    }
+
+    function getConfig(){
+       return $http.get('/api/v1/restaurant/config/');
     }
   }
 })();

@@ -8,7 +8,8 @@
     ]);
 
   angular
-    .module('cafeyoga.authentication.controllers', []);
+    .module('cafeyoga.authentication.controllers', [
+       'cafeyoga.yoga.services']);
 
   angular
     .module('cafeyoga.authentication.services', ['ngCookies']);

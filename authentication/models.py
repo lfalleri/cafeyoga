@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
@@ -35,6 +36,9 @@ class AccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
+    class Meta:
+        ordering = ('last_name', 'first_name',)
+
     email = models.EmailField(unique=True)
 
     first_name = models.CharField(max_length=40, blank=True)
@@ -53,11 +57,13 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+
+
     def __unicode__(self):
         return ' '.join([self.first_name, self.last_name])#self.email
 
     def __str__(self):
-        return ' '.join([self.email, self.first_name, self.last_name])  # self.email
+        return ' '.join([self.first_name, self.last_name, '('+self.email+')', '--> ' + str(self.credits) + ' crédits' ])
 
     def get_full_name(self):
         return ' '.join([self.first_name, self.last_name])

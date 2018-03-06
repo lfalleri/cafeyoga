@@ -79,4 +79,48 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-right: 10%;
+}
+
+.brunch-options{
+   position: relative;
+   margin-top: 2%;
+}
+
+.brunch-options:before{
+  content: '';
+  position: absolute;
+  left: 10%;
+  top: 1%;
+  width: 70%;
+  height: 0;
+  line-height: 0;
+  border-bottom: 1px dashed #3f3f3f;
+}
+
+.boisson-nom{
+  font-size: 100%;
+  font-weight: 100;
+  z-index:2;
+  background-color: #f2f2f2;
+  padding-right : 3%;
+}
+
+.boisson-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  margin-left: 5%;
+  margin-right: 10%;
+}
+
+.boisson-row:before{
+  content: '';
+  position: absolute;
+  bottom: .4rem;
+  width: 100%;
+  height: 0;
+  line-height: 0;
+  border-bottom: 1px dotted #3f3f3f;
 }

@@ -1,42 +1,318 @@
 <div ng-include="'/static/templates/general/navbar.html'"></div>
 
 
-
-<div style="margin-top: 100px;">
-  <div class="row">
-    <div class="col-sm-8">
-      <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
-    </div>
-    <div class="col-sm-4 yoga-panel-container">
-
-      <div class="col-sm-4 yoga-panel">
-        <h1>COURS : </h1>
-        <h1>{{description}}</h1>
-        <h2>Débute à : {{start}}</h2>
-        <h2>Durée : {{duration}} minutes</h2>
-      </div>
-
-      <div class="col-sm-4  yoga-user-info">
-        <div ng-if="(account | isEmpty)">
-           <h2>Vous n'êtes pas encore connecté(e)</h2>
-           <li><a href="/login">Se connecter</a></li>
-           <li><a href="/register">Créer un compte</a></li>
+<!--
+<section class="calendar-container" style="margin-top: 10%; margin-bottom:-15%;" ng-if="!(reservedLessons | isEmptyArray)">
+    <h1 style="margin-bottom:3%; text-align:center;">
+        Mes réservations
+    </h1>
+    <div class="row">
+        <div style="mex-width: 30%; margin-bottom:3%; margin-right: 5%; border: 2px groove #126596; padding:2px;" ng-repeat="reservation in reservedLessons">
+            <p>{{ reservation.description }} </p>
+            <p>{{ reservation.day }} {{ reservation.start }} -  {{ reservation.duration }} minutes </p>
         </div>
-        <div ng-if="!(account | isEmpty)">
-           <h2>Bonjour {{  account.first_name }} {{  account.last_name }}</h2>
-           <h2>Vos crédits : {{  account.credits }} </h2>
-            <div ng-show="account.credits < lesson.price">
-                <button class="btn btn-primary" ng-click="vm.reserveLesson(lesson, account)">Recharger vos credits!</button>
+    </div>
+</section>
+-->
+<section class="calendar-container" style="margin-top:10%; margin-bottom:-10%;" ng-if="alert_message">
+    <h2 style="color:{{alert_message_color}}; margin-top:1%;"
+        ng-repeat="message in alert_message">{{message}}</h2>
+</section>
+
+
+<section class="calendar-container" calendar="calendar" style="margin-top: 10%;">
+    </div>
+    <div class="row">
+        <div class="col-sm-9" style="margin-left: -5%;">
+            <div style="margin-top:5%;" ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+        </div>
+        <div class="col-sm-4 yoga-panel-container" style="margin-right: -5%;">
+
+            <div class="yoga-panel" ng-if="lesson_to_display">
+                <h1>{{ lesson.display_title }}</h1>
+                <h2>{{description}}</h2>
+                <h3>{{day}} à {{start}}</h3>
+                <h3>Durée : {{duration}} minutes</h3>
+                <h3>Places restantes : {{ lesson.nb_places }}</h3>
+                <h3>Prix par personne : {{ lesson.price }} crédits</h3>
             </div>
-           <button class="btn btn-primary"
-                   ng-click="vm.reserveLesson(lesson, account)"
-                   ng-show="account.credits >= lesson.price">
-               Reserver !
-           </button>
-        </div>
-        <h2 style="color:{{alert_message_color}};">{{alert_message}}</h2>
-      </div>
-    </div>
-  </div>
 
-</div>
+            <div class="yoga-user-info" style="margin-top: 10%;">
+                <div ng-if="(account | isEmpty)">
+                    <h2>Vous n'êtes pas encore connecté(e)</h2>
+                    <li><a href="/login">Se connecter</a></li>
+                    <li><a href="/register">Créer un compte</a></li>
+                </div>
+                <div ng-if="!(account | isEmpty)">
+                    <h2>Bonjour {{  account.first_name }} {{  account.last_name }}</h2>
+                    <h2>Vos crédits : {{  account.credits }} </h2>
+
+                    <form role="form" name="reservation_form">
+                        <div  style="font-size:30px; border: 1px solid red; background-color : #f2f2f2; color:red; max-width:70%;"
+                              class="alert alert-danger" ng-show="error" ng-bind="error">
+                        </div>
+                        <div style="font-size:30px; border: 1px solid green; background-color : #f2f2f2; color:green; max-width:70%;"
+                             class="alert alert-danger" ng-show="success" ng-bind="success">
+                        </div>
+                        <div class="form-group" ng-if="account.credits >= (lesson.price*reservationParams.nb_persons) && lesson.reservable">
+                            <md-input-container>
+                                <md-select ng-required="1"
+                                           style="font-size:20px; max-width:70%;"
+                                           ng-model="reservationParams.nb_persons"
+                                           placeholder="Pour combien ?">
+                                    <md-select-header>
+                                        <span  style="font-size:20px;"> Pour combien ? </span>
+                                    </md-select-header>
+                                    <md-option ng-value="n" ng-repeat="n in number_of_persons">{{ n }}</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <button style="font-family:'Poiret One'; font-size:30px; background-color:#137b72"
+                                    type="submit"
+                                    ng-click="createReservation(lesson, account, reservationParams)"
+                                    class="btn btn-primary">
+                                Réserver
+                            </button>
+                        </div>
+                        <div class="form-group" ng-if="account.credits < (lesson.price*reservationParams.nb_persons)">
+                            <md-input-container>
+                                <md-select ng-required="1"
+                                           style="font-size:20px; max-width:70%;"
+                                           ng-model="reservationParams.nb_persons"
+                                           placeholder="Pour combien ?">
+                                    <md-select-header>
+                                        <span  style="font-size:20px;"> Pour combien ? </span>
+                                    </md-select-header>
+                                    <md-option ng-value="n" ng-repeat="n in number_of_persons">{{ n }}</md-option>
+                                </md-select>
+                            </md-input-container>
+                            <button style="font-family:'Poiret One'; font-size:30px; background-color:#137b72"
+                                    ng-click="recrediteAccount(account)"
+                                    class="btn btn-primary">
+                                Recharger vos crédits
+                            </button>
+                        </div>
+                        <div class="form-group" ng-if="lesson.cancelable">
+                            <button style="font-family:'Poiret One'; font-size:30px; background-color:#137b72"
+                                    ng-click="cancelReservation(lesson, account, false)"
+                                    class="btn btn-primary">
+                                Annuler cette réservation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<section class="calendar-container" ng-if="account.is_staff">
+    <h2 style="margin-top:3%; text-align:center;">
+        Réservations pour le cours {{description}} - {{day}} {{start}} ({{duration}} min) :
+    </h2>
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <table style="margin-top: 3%; width:100%;">
+                <td> ID </td>
+                <td> Prénom </td>
+                <td> Nom </td>
+                <td> Email </td>
+                <td> #Personnes </td>
+                <td> Présent </td>
+                <td> Annulation </td>
+                <tr ng-repeat="reservation in staff.reservationsForLesson">
+                    <td> <a href="">{{ reservation.account.id }} </a></td>
+                    <td> {{ reservation.account.first_name }} </td>
+                    <td> {{ reservation.account.last_name }} </td>
+                    <td> {{ reservation.account.email }} </td>
+                    <td> {{ reservation.nb_personnes }} </td>
+                    <td>
+                        <md-checkbox style="vertical-align:middle;"
+                                     ng-model="reservation.checked_present"
+                                     ng-change="checkedPresent(reservation)"
+                                     ng-checked="reservation.checked_present"
+                                     aria-label="Présent ?">
+                        </md-checkbox>
+                    </td>
+                    <td>
+                        <a>
+                            <md-icon md-font-icon="material-icons"
+                                     ng-click="cancelReservation(reservation.lesson, reservation.account, true)">
+                                delete
+                            </md-icon>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <div class="flex-row add-persons">
+                <div class="flex-col">
+                    <a>
+                        <md-icon md-font-icon="material-icons"
+                                 ng-click="displaySearchForm()">
+                            person_add
+                        </md-icon>
+                    </a>
+                    <h3>Eleve inscrit</h3>
+                </div>
+
+                <div class="flex-col">
+                    <a>
+                        <md-icon md-font-icon="material-icons"
+                                 ng-click="addAnonymousUser(lesson)">
+                            person_add
+                        </md-icon>
+                    </a>
+                    <h3>Anonyme</h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6">
+            <div style="margin-top:2%;" ng-if="staff.addUser.displaySearchUserForm">
+                <form style="margin:3% 10% 0 40%;" style="margin-left:30%;" role="form" ng-submit="searchUser()" name="search_user_form">
+                    <div  style="font-size:20px; border: 1px solid red; background-color : #f2f2f2; color:red; max-width:70%;"
+                          class="alert alert-danger" ng-show="staff.addUser.userNotFound" ng-bind="staff.addUser.userNotFound">
+                    </div>
+                    <div class="form-group" style="max-width : 50%;">
+                        <label for="search_nom">Nom</label>
+                        <input style="font-family:'Poiret One'; font-size:20px;"
+                               name="nom"
+                               type="text"
+                               class="form-control"
+                               id="search_nom"
+                               ng-model="staff.addUser.last_name"
+                               placeholder="Nom"
+                               ng-change="changeForm()"/>
+                    </div>
+                    <div class="form-group" style="max-width : 50%;">
+                        <label for="search_prenom">Prénom</label>
+                        <input style="font-family:'Poiret One'; font-size:20px;"
+                               name="prenom"
+                               type="text"
+                               class="form-control"
+                               id="search_prenom"
+                               ng-model="staff.addUser.first_name"
+                               placeholder="Prénom"
+                               ng-change="changeForm()"/>
+                    </div>
+                    <div class="form-group" style="max-width : 50%;">
+                        <label for="search_email">Prénom</label>
+                        <input style="font-family:'Poiret One'; font-size:20px;"
+                               name="email"
+                               type="email"
+                               class="form-control"
+                               id="search_email"
+                               ng-model="staff.addUser.email"
+                               placeholder="Email"
+                               ng-change="changeForm()"/>
+                    </div>
+                    <div class="button-flex-row">
+                        <div class="form-group">
+                            <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                    type="submit"
+                                    class="btn btn-primary">
+                                Recherche
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                    ng-click="hideSearchForm()"
+                                    class="btn btn-primary">
+                                Retour
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-if="staff.addUser.displaySearchedAccounts">
+                <table style="margin-top: 3%; width:100%;">
+                    <td> ID </td>
+                    <td> Prénom </td>
+                    <td> Nom </td>
+                    <td> Email </td>
+                    <td> Ajouter </td>
+                    <tr ng-repeat="searchedAccount in staff.addUser.searchedAccounts">
+                        <td> <a href="">{{ searchedAccount.id }} </a></td>
+                        <td> {{ searchedAccount.first_name }} </td>
+                        <td> {{ searchedAccount.last_name }} </td>
+                        <td> {{ searchedAccount.email }} </td>
+                        <td>
+                            <md-checkbox style="vertical-align:middle;"
+                                         ng-model="searchedAccount.checked_present"
+                                         ng-change="staff.addUser.selectSearchedAccount(searchedAccount)"
+                                         ng-checked="searchedAccount.checked_present"
+                                         aria-label="Ajouter">
+                            </md-checkbox>
+                        </td>
+                    </tr>
+                </table>
+                <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72; margin-top:5%;"
+                        ng-click="hideSearchedAccounts()"
+                        class="btn btn-primary">
+                    Retour
+                </button>
+            </div>
+            <div style="margin:3% 20% 0 20%;" ng-if="staff.addUser.displayDetailedAccount">
+                <h2>{{ staff.addUser.selectedAccount.first_name}} {{ staff.addUser.selectedAccount.last_name}}  </h2>
+                <h3>Id: {{ staff.addUser.selectedAccount.id }} </h3>
+                <h3>Email: {{ staff.addUser.selectedAccount.email }} </h3>
+                <h3>Solde: {{ staff.addUser.selectedAccount.credits }} </h3>
+
+                <h3>Places restantes pour ce cours : {{ lesson.nb_places }} </h3>
+                <h3>Prix du cours/personne: {{ lesson.price }} </h3>
+
+                <h2 ng-if="staff.addUser.nb_persons<=1" style="color:orange;">Réservation pour : {{ staff.addUser.nb_persons }} personne </h2>
+                <h2 ng-if="staff.addUser.nb_persons>1" style="color:orange;">Réservation pour : {{ staff.addUser.nb_persons }} personnes </h2>
+
+                <form role="form" ng-submit="proceedBalance(staff.addUser.selectedAccount,staff.addUser.proceed_credit,staff.addUser.proceed_debit)" name="proceed_balance">
+                    <div  style="font-size:20px; border: 1px solid red; background-color : #f2f2f2; color:red; max-width:70%;"
+                          class="alert alert-danger" ng-show="staff.addUser.proceedBalanceError" ng-bind="staff.addUser.proceedBalanceError">
+                    </div>
+                    <div class="form-group" style="max-width : 50%;">
+                        <label for="proceed_credit">Crédit</label>
+                        <input style="font-family:'Poiret One'; font-size:20px;"
+                               name="credit"
+                               type="text"
+                               class="form-control"
+                               id="proceed_credit"
+                               ng-model="staff.addUser.proceed_credit"
+                               placeholder="Crédit"
+                               ng-change="changeForm()"/>
+                    </div>
+                    <div class="form-group" style="max-width : 50%;">
+                        <label for="proceed_debit">Débit</label>
+                        <input style="font-family:'Poiret One'; font-size:20px;"
+                               name="prenom"
+                               type="text"
+                               class="form-control"
+                               id="proceed_debit"
+                               ng-model="staff.addUser.proceed_debit"
+                               placeholder="Débit"
+                               ng-change="updateNbPersons()"/>
+                    </div>
+                    <div style="margin-top:5%;" class="row">
+                        <div class="form-group">
+                            <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                    ng-click="hideProceedBalanceForm()"
+                                    class="btn btn-primary">
+                                Retour
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                    type="submit"
+                                    class="btn btn-primary">
+                                Procéder
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div ng-include="'/static/templates/general/footer.html'"></div>

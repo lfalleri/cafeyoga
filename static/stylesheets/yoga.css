@@ -1,46 +1,145 @@
 .yoga-panel-container{
-   padding-top: 8%;
-   font-family: "Allan";
+   padding-top: 5%;
+   font-family: "Poiret One";
 }
+
+.calendar-container{
+   margin-left: 5%;
+   margin-right: 5%;}
+
+.calendar-container  h2{
+   font-size: 120%;}
+
+.calendar-container > h2{
+   font-size: 120%;}
+
+.calendar-container  h3{
+   font-size: 100%;
+   font-transform: none;}
 
 .yoga-panel{
    width : 100%;
-   height : 100%;
-   font-family: "Lobster";
-}
-.yoga-panel{
-   font-family: "Lobster";
    font-size: 100%;
-}
-.yoga-panel > h2{
-   font-family: "Handlee";
-   font-size: 150%;
 }
 
 .yoga-panel > h1{
-   font-family: "Handlee";
    font-size: 150%;
+   margin-bottom: 5%;
 }
+
+.yoga-panel > h2{
+   font-size: 120%;
+   margin-bottom: 5%;
+}
+
+.yoga-panel > h3{
+   font-size: 100%;
+   margin-bottom: 5%;
+}
+
 
 .yoga-user-info{
    width : 100%;
-   height : 100%;
 }
 .yoga-user-info h2{
-   font-family: "Handlee";
    font-size: 150%;
 }
 .yoga-user-info a{
-   font-family: "Handlee";
    font-size: 150%;
 }
+
+.yoga-user-info li{
+   list-style:none;
+}
+
 .yoga-user-info a:hover{
-   color: red;
+   color: #137b72;
+   text-decoration: none;
 }
 yoga-user-info > button{
-   font-family: "Allan";
+
 }
 
 .container-fluid{
    padding: 0;
+}
+
+table, th , td  {
+  text-align : center;
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 10px;
+}
+
+table a:hover md-icon{
+  cursor:pointer;
+  color:red;
+}
+
+.add-persons a:hover md-icon{
+  cursor:pointer;
+  color:green;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.flex-col{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.flex-col > *{
+   margin: auto;
+}
+
+.add-persons{
+   margin-top: 2%;
+}
+.pending-reservation{
+   padding:5%;
+}
+.pending-reservation-flex-row{
+  display: flex;
+  flex-direction: row;
+  flex-wrap : wrap;
+  justify-content: space-between;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.pending-reservation-lesson{
+  padding : 10%;
+  margin-top: 30px;
+  border: 4px solid green;
+  border-radius: 15px;
+  box-shadow: 10px 10px 15px 0px #3f3f3f;
+  width:100%;
+}
+.pending-reservation-lesson h3{
+   font-size: 100%;
+   font-weight: 600;
+   text-transform : none;
+
+}
+.pending-reservation-lesson-detail{
+  margin-top:5%;
+}
+
+.pending-reservation-button{
+  margin : 5% 30% 0% 30%;
+}
+
+.lesson-finished{
+  background-color: #9a9ca0;
+}
+
+.table-header{
+  background-color: #d4d8dd;
 }

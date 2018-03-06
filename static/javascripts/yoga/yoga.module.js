@@ -11,7 +11,6 @@
 
   angular
     .module('cafeyoga.yoga.controllers', [
-      'mwl.calendar',
       'angularMoment',
       'ui.bootstrap',
       'cafeyoga.authentication.services',

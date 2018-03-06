@@ -3,10 +3,26 @@ from django.contrib import admin
 
 from rest_framework_nested import routers
 
-from authentication.views import AccountViewSet, LoginView, LogoutView, FullAccountView, SettingsView, LandingPageView
-from yoga.views import CalendarView, LessonView, ReservationView
-from cafeyoga.views import IndexView, LandingPageView
-from restaurant.views import MenuView
+from authentication.views import AccountViewSet, \
+                                 AccountView, \
+                                 LoginView, \
+                                 LogoutView, \
+                                 FullAccountView, \
+                                 SettingsView, \
+                                 LandingPageView
+
+from yoga.views import CalendarView, \
+                       LessonView, \
+                       ReservationView,\
+                       PendingReservationView,\
+                       ProfesseursView
+
+from cafeyoga.views import IndexView,\
+                           LandingPageView
+
+from restaurant.views import CarteView, \
+                             RestaurantConfigView,\
+                             RestaurantReservationView
 #from authentication import urls as authentication_urls
 
 
@@ -23,25 +39,32 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-
-    # ... URLs
-
+    # Account Views
     url(r'^api/v1/', include(router.urls)),
     url(r'^api/v1/', include(accounts_router.urls)),
     url(r'^api/v1/auth/login/$', LoginView.as_view(), name='login'),
     url(r'^api/v1/auth/logout/$', LogoutView.as_view(), name='logout'),
-    url(r'^api/v1/auth/account/$', FullAccountView.as_view(), name='account'),
-    #url(r'^api/v1/auth/settings/$', SettingsView.as_view(), name='account'),
+    url(r'^api/v1/auth/fullaccount/$', FullAccountView.as_view(), name='account'),
+    url(r'^api/v1/auth/accounts/$', AccountView.as_view(), name='accounts'),
+    url(r'^api/v1/auth/update-profile/$', AccountView.as_view(), name='update'),
+
+    # Yoga Views
     url(r'^api/v1/calendar/$', CalendarView.as_view(), name='calendar'),
     url(r'^api/v1/yoga/lessons/$', LessonView.as_view(), name='lesson'),
-    url(r'^api/v1/yoga/reservation/$', ReservationView.as_view(), name='yoga'),
-    url(r'^api/v1/restaurant/menu/$', MenuView.as_view(), name='menu'),
-    #url(r'^$', include(authentication_urls.urls), name='general'),
+    url(r'^api/v1/yoga/reservation/$', ReservationView.as_view(), name='yoga_reservation'),
+    url(r'^api/v1/yoga/pendingreservation/$', PendingReservationView.as_view(), name='yoga_pending_reservation'),
+    url(r'^api/v1/yoga/animators/$', ProfesseursView.as_view(), name='yoga_animators'),
 
+    # Restaurant Views
+    url(r'^api/v1/restaurant/menu/$', CarteView.as_view(), name='carte'),
+    url(r'^api/v1/restaurant/config/$', RestaurantConfigView.as_view(), name='carte'),
+    url(r'^api/v1/restaurant/reservation/$', RestaurantReservationView.as_view(), name='reservation'),
+
+    # Admin Views
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/$', include(admin.site.urls)),
     url(r'^admin/([-]?[0-9]*)/$', include(admin.site.urls)),
 
+    # Index Views
     url('^.*$', IndexView.as_view(), name='index'),
-    #url('^.*$', LandingPageView.as_view(), name='general'),
 )

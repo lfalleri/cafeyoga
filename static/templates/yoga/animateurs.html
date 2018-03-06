@@ -1,0 +1,20 @@
+<div ng-include="'/static/templates/general/navbar.html'"></div>
+
+<section class="text-container" style="margin-top: 10%;">
+    <h1>Nos professeurs</h1>
+    <div style="margin: 5%;" ng-repeat="animator in animators">
+        <div style="outline: 1px solid #3f3f3f; outline-offset:15px;" class="flexible-row">
+            <div class="flexible-col">
+                <h3> {{animator.prenom }} {{animator.nom}}</h3>
+                <h4> {{animator.description }}</h4>
+                <a href="http://{{animator.lien}}"> {{animator.lien }}</a>
+            </div>
+            <img class="img-fluid" src="{{animator.photo}}" alt="{{animator.nom}}">
+        </div>
+    </div>
+</section>
+
+
+
+
+<div ng-include="'/static/templates/general/footer.html'"></div>

@@ -1,0 +1,185 @@
+<div ng-include="'/static/templates/general/navbar.html'"></div>
+
+<header class="masthead">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in">Réserver une table</div>
+            <div class="intro-heading"></div>
+        </div>
+    </div>
+</header>
+
+<section class="text-container">
+    <div class="container">
+        <div ng-if="fermetures_days.length > 1">
+            <div class ="row">
+               <i class="fa fa-warning" style="font-size:30px;color:orange"></i>
+               <div style="font-size:20px; font-style: bold; margin-bottom:5%; margin-left:2%;">
+                   Fermeture exceptionnelle du {{ fermetures_days[0] }} au {{ fermetures_days[1] }} inclus
+               </div>
+            </div>
+
+        </div>
+        <div ng-if="fermetures_days.length == 1">
+            <div class ="row">
+               <i class="fa fa-warning" style="font-size:30px;color:orange"></i>
+               <div style="font-size:20px; font-style: bold; margin-bottom:5%;">
+                   Fermeture exceptionnelle le {{ fermetures_days[0] }}
+               </div>
+            </div>
+
+        </div>
+        <!--         <div class="row">
+                    <md-input-container>
+                        <md-select  ng-required="1" style="font-size:20px;" ng-model="selectedDate" placeholder="Sélectionnez un jour" ng-change="changeDay()">
+                            <md-select-header>
+                                <span  style="font-size:20px;"> Sélectionnez un jour </span>
+                            </md-select-header>
+                            <md-option ng-value="day.locale" ng-repeat="day in select_day_list">{{ day.locale }}</md-option>
+                        </md-select>
+                    </md-input-container>
+
+
+                    <md-input-container>
+                        <md-select ng-required="1" style="font-size:20px;" ng-model="selectedHour" placeholder="Sélectionnez une heure">
+                            <md-select-header>
+                                <span  style="font-size:20px;"> Sélectionnez une heure </span>
+                            </md-select-header>
+                            <md-option ng-value="slot" ng-repeat="slot in selected_day_hours">{{ slot }}</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <md-select ng-required="1" style="font-size:20px;" ng-model="selectedNumberOfPersons" placeholder="Pour combien ?">
+                            <md-select-header>
+                                <span  style="font-size:20px;"> Pour combien ? </span>
+                            </md-select-header>
+                            <md-option ng-value="n" ng-repeat="n in number_of_persons">{{ n }}</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>-->
+        <div  >
+
+
+
+            <form role="form" ng-submit="reservation()" name="reservation_form">
+                <div  style="font-size:30px; border: 1px solid red; background-color : #f2f2f2; color:red; max-width:70%;"
+                      class="alert alert-danger" ng-show="error" ng-bind="error">
+                </div>
+                <div style="font-size:30px; border: 1px solid green; background-color : #f2f2f2; color:green; max-width:70%;"
+                      class="alert alert-danger" ng-show="success" ng-bind="success">
+                </div>
+                <md-input-container>
+                    <md-select class="form-control"
+                               validate-on="submit"
+                               ng-required="1"
+                               style="font-size:20px;"
+                               ng-model="selectedDate"
+                               placeholder="Sélectionnez un jour"
+                               ng-change="changeDay()">
+                        <md-select-header>
+                            <span  style="font-size:20px;"> Sélectionnez un jour </span>
+                        </md-select-header>
+                        <md-option ng-value="day.locale" ng-repeat="day in select_day_list">{{ day.locale }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+
+                <md-input-container>
+                    <md-select class="form-control"
+                               validate-on="submit"
+                               ng-required="1"
+                               style="font-size:20px;"
+                               ng-model="selectedHour"
+                               placeholder="Sélectionnez une heure"
+                               ng-change="changeHour()">
+                        <md-select-header>
+                            <span  style="font-size:20px;"> Sélectionnez une heure </span>
+                        </md-select-header>
+                        <md-option ng-value="slot" ng-repeat="slot in selected_day_hours">{{ slot }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container>
+                    <md-select ng-required="1"
+                               style="font-size:20px;"
+                               ng-model="selectedNumberOfPersons"
+                               placeholder="Pour combien ?">
+                        <md-select-header>
+                            <span  style="font-size:20px;"> Pour combien ? </span>
+                        </md-select-header>
+                        <md-option ng-value="n" ng-repeat="n in number_of_persons">{{ n }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <h3 style="margin-top:5%; margin-bottom:3%;">Vos informations personnelles :</h3>
+
+                <div class="form-group" style="max-width : 50%;">
+                    <!-- <label for="reservation_nom">Nom</label> -->
+                    <input style="font-family:'Poiret One'; font-size:20px;"
+                           name="nom"
+                           type="text"
+                           class="form-control"
+                           id="reservation_nom"
+                           ng-model="reservation_nom"
+                           ng-required="1"
+                           placeholder="Nom *"
+                           validate-on="submit"
+                           oninvalid="this.setCustomValidity('Champ obligatoire')"
+                           oninput="setCustomValidity('')"
+                           ng-change="changeForm()"/>
+                </div>
+                <div class="form-group" style="max-width : 50%;">
+                    <!-- <label for="reservation_email">Email</label> -->
+                    <input style="font-family:'Poiret One'; font-size:20px;"
+                           name="email"
+                           type="email"
+                           class="form-control"
+                           id="reservation_email"
+                           ng-model="reservation_email"
+                           ng-required="1"
+                           placeholder="Email *"
+                           oninvalid="this.setCustomValidity('Champ obligatoire')"
+                           oninput="setCustomValidity('')"
+                           ng-change="changeForm()"/>
+                </div>
+                <div class="form-group" style="max-width : 50%;">
+                    <!--<label for="reservation_tel">Téléphone</label>-->
+                    <input style="font-family:'Poiret One'; font-size:20px;"
+                           type="text"
+                           class="form-control"
+                           id="reservation_tel"
+                           ng-model="reservation_tel"
+                           placeholder="Téléphone (optionnel)"
+                           ng-change="changeForm()"/>
+                </div>
+                <div class="form-group" >
+                    <!--<label for="reservation_tel">Téléphone</label>-->
+                    <textarea  style="font-family:'Poiret One'; font-size:20px; min-height : 100px; min-width : 50%;"
+                               ng-model="reservation_comment"
+                               placeholder="Commentaire (optionnel)"
+                              ng-change="changeForm()"/>
+                </div>
+                <div class="form-group">
+                    <button style="font-family:'Poiret One'; font-size:30px; background-color:#137b72" type="submit" class="btn btn-primary">Reserver</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+
+
+    <!--
+        <div ng-controller="SelectedDayCtrl" layout="column" layout-align="center center" style="min-height: 300px;" class="selectdemoValidations">
+            <md-select md-selected-text="mdselectText" multiple="{{false}}" placeholder="Pick" ng-model="myModel" ng-change="change()">
+                <md-option ng-repeat="item in itemList" ng-value="item.value" ng-click="itemSelect(item)">{{item.text}}</md-option>
+            </md-select>
+            {{myModel}}
+            <md-button ng-click="clear()">Clear</md-button>
+
+        </div>
+    -->
+</section>

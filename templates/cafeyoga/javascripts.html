@@ -4,8 +4,9 @@
 {% compress js %}
 <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
-<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/material.js' %}"></script>
-<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/ripples.js' %}"></script>
+<link rel="text/javascript" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js">
+<!--<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/material.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/ripples.js' %}"></script>-->
 <script type="text/javascript" src="{% static 'bower_components/underscore/underscore.js' %}"></script>
 
 <!-- Bootstrap core JavaScript -->
@@ -18,12 +19,13 @@
 
 <!-- Plugin JavaScript -->
 <script type="text/javascript" src="{% static 'javascripts/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-
 <script type="text/javascript" src="{% static 'bower_components/angular/angular.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-aria/angular-aria.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
-<script type="text/javascript" src="{% static 'bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-material/angular-material.js' %}"></script>
+<!--<script type="text/javascript" src="{% static 'bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js' %}"></script>-->
 <script type="text/javascript" src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/moment/locale/fr.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/angular-moment/angular-moment.min.js' %}"></script>
@@ -32,9 +34,8 @@
 <script type="text/javascript" src="{% static 'bower_components/angular-ui-calendar/src/calendar.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'bower_components/fullcalendar/dist/gcal.js' %}"></script>
-<script type="text/javascript" src="{% static 'bower_components/rrule/lib/rrule.js' %}"></script>
-<script type="text/javascript" src="{% static 'bower_components/ngDialog/js/ngDialog.js' %}"></script>
-<script type="text/javascript" src="{% static 'lib/snackbarjs/snackbar.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/ng-dialog/js/ngDialog.js' %}"></script>
+
 
 <script type="text/javascript" src="{% static 'javascripts/cafeyoga.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/cafeyoga.config.js' %}"></script>
@@ -53,11 +54,16 @@
 <script type="text/javascript" src="{% static 'javascripts/yoga/yoga.module.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/yoga/services/yoga.service.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/yoga/controllers/yoga.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/yoga/controllers/yoga.reservation.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/yoga/controllers/yoga.cancellation.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/yoga/controllers/yoga.animators.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/yoga/controllers/recharge.controller.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/yoga/controllers/admin.yoga.controller.js' %}"></script>
 
 
 <script type="text/javascript" src="{% static 'javascripts/restaurant/restaurant.module.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/restaurant/services/restaurant.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/restaurant/controllers/carte.controller.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascripts/restaurant/controllers/restaurant.controller.js' %}"></script>
 
 <script type="text/javascript" src="{% static 'javascripts/utils/utils.module.js' %}"></script>

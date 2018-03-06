@@ -19,11 +19,10 @@
 
     vm.logout = logout;
     activate()
-    $scope.account = Authentication.fullAccount;
+    //$scope.account = Authentication.fullAccount;
 
     function activate() {
          Authentication.getFullAccount(function(value){
-            Authentication.fullAccount = value;
             $scope.account = value;
          });
       }

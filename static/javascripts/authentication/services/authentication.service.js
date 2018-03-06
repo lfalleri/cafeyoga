@@ -15,7 +15,7 @@
   * @namespace Authentication
   * @returns {Factory}
   */
-  function Authentication($cookies, $http, $rootScope) {
+  function Authentication($cookies, $http, $rootScope, $window) {
     /**
     * @name Authentication
     * @desc The Factory to be returned
@@ -26,11 +26,13 @@
       login: login,
       logout: logout,
       register: register,
+      updateProfile : updateProfile,
       setAuthenticatedAccount: setAuthenticatedAccount,
       unauthenticate: unauthenticate,
       getFullAccount: getFullAccount,
       isStaff: isStaff,
       fullAccount : {},
+      getUsers: getUsers,
     };
 
     return Authentication;
@@ -47,7 +49,6 @@
     * @memberOf thinkster.authentication.services.Authentication
     */
     function register(email, password,last_name, first_name) {
-      console.log("Authentication.register() "+email + " " + password + " " + first_name + " " + last_name);
       return $http.post('/api/v1/accounts/', {
         password: password,
         email: email,
@@ -68,7 +69,6 @@
       * @desc Log "Epic failure!" to the console
       */
       function registerErrorFn(data, status, headers, config) {
-        console.error('Registration failed' + status);
         alert("Echec de l'enregistrement");
       }
     }
@@ -91,12 +91,13 @@
        * @desc Set the authenticated account and redirect to index
        */
       function loginSuccessFn(data, status, headers, config) {
+
         Authentication.setAuthenticatedAccount(data.data);
         Authentication.getFullAccount(function(fullAccount){
+            window.localStorage.setItem('fullAccount', JSON.stringify(fullAccount));
             Authentication.fullAccount = fullAccount;
         });
         $rootScope.back();
-        //window.location = '/';
       }
 
       /**
@@ -104,7 +105,6 @@
        * @desc Log "Epic failure!" to the console
        */
       function loginErrorFn(data, status, headers, config) {
-        console.error('Login failed : ' + status);
         alert('Email ou mot de passe invalide');
       }
     }
@@ -126,6 +126,7 @@
        function logoutSuccessFn(data, status, headers, config) {
          Authentication.unauthenticate();
          Authentication.fullAccount = {};
+         window.localStorage.removeItem('fullAccount');
          //window.location = '/';
          $rootScope.back();
        }
@@ -135,8 +136,30 @@
         * @desc Log "Epic failure!" to the console
         */
        function logoutErrorFn(data, status, headers, config) {
-         console.error('Epic failure!');
+         console.error('Logout failure!');
        }
+    }
+
+    /**
+    * @name login
+    * @desc Try to log in with email `email` and password `password`
+    * @param {string} email The email entered by the user
+    * @param {string} password The password entered by the user
+    * @returns {Promise}
+    * @memberOf thinkster.authentication.services.Authentication
+    */
+    function updateProfile(account_id, first_name, last_name, email, password, callback) {
+       return $http.post('/api/v1/auth/update-profile/', {
+          account_id: account_id,
+          first_name:first_name,
+          last_name:last_name,
+          email: email,
+          password: password
+       }).then(function(data, status, headers, config){
+          callback(true,"Profil mis à jour");
+       }, function(data, status, headers, config){
+          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+       });
     }
 
     /**
@@ -149,7 +172,6 @@
        if (!$cookies.authenticatedAccount) {
           return;
        }
-
        return JSON.parse($cookies.authenticatedAccount);
     }
 
@@ -184,26 +206,45 @@
        delete $cookies.authenticatedAccount;
     }
 
-    function getFullAccount(callback) {
-
-       if(!angular.equals({},Authentication.fullAccount)){
-          console.log("Already collected fullAccount = ",Authentication.fullAccount, callback);
-          callback(Authentication.fullAccount);
+    function requestFullAccount(email, callback){
+       return $http.post('/api/v1/auth/fullaccount/', {
+          email: email
+       }).then(function(data, status, headers, config){
+          Authentication.fullAccount = data.data;
+          callback(data.data);
           return Authentication.fullAccount;
+       }, function(data, status, headers, config) {
+         alert('Email ou mot de passe invalide');
+       });
+    }
+
+    function getFullAccount(callback) {
+       if(!angular.equals(Authentication.fullAccount,{})){
+
+          return requestFullAccount(Authentication.fullAccount.email,callback );
+         // callback(Authentication.fullAccount);
+         // return Authentication.fullAccount;
+       }
+       var storageUser = window.localStorage.getItem('fullAccount');
+       if(storageUser){
+          Authentication.fullAccount = JSON.parse(storageUser);
+          return requestFullAccount(Authentication.fullAccount.email,callback );
+          //callback(Authentication.fullAccount);
+         // return Authentication.fullAccount;
        }
        var account =  Authentication.getAuthenticatedAccount();
        if( !account )
        {
-          return;
+          callback({});
+          return {};
        }
-       return $http.post('/api/v1/auth/account/', {
+       return $http.post('/api/v1/auth/fullaccount/', {
           email: account.email
        }).then(function(data, status, headers, config){
           Authentication.fullAccount = data.data;
           callback(data.data);
           return Authentication.fullAccount;
        }, function(data, status, headers, config) {
-         console.error('Login failed : ' + status);
          alert('Email ou mot de passe invalide');
        });
     }
@@ -215,6 +256,17 @@
          }
          return account.is_staff;
       });
+    }
+
+    function getUsers(last_name, first_name, email, callback){
+       return $http.get('api/v1/auth/accounts/',{
+           params: {first_name: first_name, last_name:last_name, email:email}}
+       ).then(
+         function(data, status, headers, config){
+           callback(true, data.data);
+         },function(data, status, headers, config){
+           callback(false, []);
+       });
     }
   }
 })();

@@ -10,19 +10,33 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <div ng-if="!(account | isEmpty)">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/restaurant">Restaurant</a>
-            <ul class="dropdown-menu">
+          <li class="nav-item dropdown">
+            <a class="nav-link js-scroll-trigger dropdown-link" href="/restaurant">Restaurant</a>
+            <ul class="dropdown-content">
               <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="/nosproduits">Nos produits</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="/carte">Notre carte</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/restaurant/reservation">Réservation</a>
+              </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/yoga">Yoga</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link js-scroll-trigger" href="/yoga/calendrier">Yoga</a>
+            <ul class="dropdown-content">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/yoga/professeurs">Les animateurs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/yoga/calendrier">Calendrier des cours</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/restaurant/reservation">Réservation</a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/boutique">Boutique & Expositions</a>
@@ -41,11 +55,30 @@
 
       <div ng-if="(account | isEmpty)">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/restaurant">Restaurant</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link js-scroll-trigger dropdown-link" href="/restaurant">Restaurant</a>
+            <ul class="dropdown-content">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/nosproduits">Nos produits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/carte">Notre carte</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/restaurant/reservation">Réservation</a>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/yoga">Yoga</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link js-scroll-trigger" href="/yoga/calendrier">Yoga</a>
+            <ul class="dropdown-content">
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/yoga/professeurs">Les animateurs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/yoga/calendrier">Calendrier des cours</a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/boutique">Boutique & Expositions</a>

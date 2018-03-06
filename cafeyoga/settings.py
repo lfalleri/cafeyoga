@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 from django.utils import timezone
 import dj_database_url
 import os
+import locale
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -82,6 +82,10 @@ if bool(os.environ.get('LOCAL_DEV', False)):
 LANGUAGE_CODE = 'fr-fr'
 
 TIME_ZONE = 'Europe/Paris'
+try:
+    locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+except:
+    pass
 
 USE_I18N = True
 
