@@ -5,11 +5,13 @@
     .module('cafeyoga', [
       'ngMaterial',
       'ngMessages',
+      'angularPayments',
       'cafeyoga.config',
       'cafeyoga.routes',
       'cafeyoga.authentication',
       'cafeyoga.yoga',
       'cafeyoga.restaurant',
+      'cafeyoga.boutique',
       'cafeyoga.layout',
       'cafeyoga.utils',
     ]);

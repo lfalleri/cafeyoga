@@ -20,6 +20,10 @@
       controller: 'LoginController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/authentication/login.html'
+    }).when('/monespace', {
+      controller: 'RegisterController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/authentication/monespace.html'
     }).when('/settings', {
       controller: 'SettingsController',
       controllerAs: 'vm',
@@ -52,11 +56,15 @@
       controller: 'RestaurantController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/nosproduits.html'
-    }).when('/notrecharte',{
+    }).when('/restaurant/nosproduits',{
+      controller: 'NosProduitsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/restaurant/nosproduits.html'
+    }).when('/restaurant/notrecharte',{
       controller: 'RestaurantController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/notrecharte.html'
-    }).when('/carte',{
+    }).when('/restaurant/carte',{
       controller: 'CarteController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/carte.html'
@@ -64,10 +72,22 @@
       controller: 'RestaurantController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/restaurant/reservation.html'
+    }).when('/contact',{
+      controller: 'ContactController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/general/contact.html'
     }).when('/',{
       controller: 'LandingPageController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/general/landingpage.html'
+    }).when('/boutique/createurs',{
+      controller: 'BoutiqueController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/boutique/boutique.html'
+    }).when('/boutique/expositions',{
+      controller: 'BoutiqueController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/boutique/expositions.html'
     }).otherwise({
        redirectTo:"/"
     });

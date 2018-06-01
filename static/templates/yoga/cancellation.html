@@ -1,82 +1,71 @@
 <div ng-include="'/static/templates/general/navbar.html'"></div>
 
-<section class="calendar-container" style="margin-top: 3%;">
-    <div class="pending-reservation">
+<section class="text-container">
+    <h2 style="text-align: center;">Bonjour {{  account.first_name }} {{  account.last_name }}</h2><br><br>
+    <div ng-if="cancellationSuccessful" class="text-centered" ng-if="alert_message">
+        <h2>Votre réservation a bien été annulée !</h2>
+        <h4>Vous pouvez réserver un autre cours en retournant au calendrier :</h4>
 
-        <h2 style="text-align: center;">Bonjour {{  account.first_name }} {{  account.last_name }}</h2><br><br>
-
-        <div ng-if="cancellationSuccessful" class="text-centered" ng-if="alert_message">
-            <h2>Votre réservation a bien été annulée !</h2>
-            <h4>Vous pouvez réserver un autre cours en retournant au calendrier :</h4>
-
-            <div style="margin-top: 10%;" class="button-flex-col pending-reservation-button">
-                <button
-                        type="submit"
-                        ng-click="gotoCalendar()"
-                        class="button-type-submit btn btn-primary">
-                    Retour
-                </button>
-            </div>
-
+        <div style="margin: 5% auto auto auto;" layout="column" flex="20">
+            <md-button
+                    ng-click="gotoCalendar()"
+                    class="md-primary md-raised cy-button">
+                Retour
+            </md-button>
         </div>
-        <div ng-if="!cancellationSuccessful">
-            <div class="pending-reservation-flex-row">
-                <div style="width:40%;">
-                    <h2 style="text-align: center;">Votre cours :</h2>
-                    <div class="pending-reservation-lesson" >
-                        <h2 class="pending-reservation-lesson-detail" style="font-weight: 900;">{{ lesson.type }} {{ lesson.intensity }} </h2>
-                        <h3 class="pending-reservation-lesson-detail" > Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h3>
-                        <h3 class="pending-reservation-lesson-detail" >{{ meta.day}} à {{meta.start}}</h3>
-                        <h3 class="pending-reservation-lesson-detail" >Durée : {{meta.duration}} minutes</h3>
-                        <h3 class="pending-reservation-lesson-detail" >Places restantes : {{ lesson.nb_places }}</h3>
-                    </div>
-                </div>
-
-                <div  style="width:30%;">
-                    <h2 style="text-align: center;">Votre réservation :</h2>
-                    <div class="pending-reservation-lesson">
-                        <table>
-                            <td style="font-weight: bolder;">Solde actuel : </td>
-                            <td style="font-weight: bolder;">{{ account.credits }} </td>
-                            <tr>
-                                <td>Nombre de places réservées : </td>
-                                <td>{{ nb_persons }} </td>
-                            </tr>
-                            <tr>
-                                <td>Prix/personne : </td>
-                                <td>{{ lesson.price }} </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bolder;">Prix total : </td>
-                                <td style="font-weight: bolder;">{{ meta.total_price }} </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bolder;">Solde après réservation : </td>
-                                <td style="font-weight: bolder;">{{ meta.next_credits }} </td>
-                            </tr>
-                        </table>
-                    </div>
+    </div>
+    <div ng-if="!cancellationSuccessful">
+        <h2>Vous souhaitez annuler votre réservation</h2>
+        <div layout="row" layout-xs="column" layout-sm="column"  style="margin-top:5%;">
+            <div layout="column" flex-gt-sm="45" flex="100">
+                <h2 style="text-align: center;">Votre cours :</h2>
+                <div class="pending-reservation-lesson">
+                    <h2 class="pending-reservation-lesson-detail text-centered" style="font-weight: 900;">{{ lesson.type }} {{ lesson.intensity }} </h2>
+                    <h3 class="pending-reservation-lesson-detail text-centered" > Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h3>
+                    <h3 class="pending-reservation-lesson-detail text-centered" >{{ meta.day}} à {{meta.start}}</h3>
+                    <h3 class="pending-reservation-lesson-detail text-centered" >Durée : {{meta.duration}} minutes</h3>
+                    <h3 class="pending-reservation-lesson-detail text-centered" >Places restantes : {{ lesson.nb_places }}</h3>
                 </div>
             </div>
-            <div style="margin-top: 10%;" class="button-flex-col pending-reservation-button">
-                <button
-                        type="submit"
-                        ng-click="exitCancellation(lesson, account, nb_persons)"
-                        class="button-type-submit btn btn-primary">
-                    Retour
-                </button>
-                <button
-                        type="submit"
-                        ng-click="processCancellation()"
-                        class="button-type-submit btn btn-primary">
-                    Annuler
-                </button>
+            <div hide-gt-sm layout style="height : 50px;"/>
+            <div layout="column" flex-offset-gt-sm="10" flex-gt-sm="45" flex="100">
+                <h2 style="text-align: center;">Votre réservation :</h2>
+                <div style="height:100%;" class="pending-reservation-lesson">
+                    <table style="min-width: 100%; height:100%; margin:auto;">
+                        <td style="font-weight: bolder;">Solde actuel</td>
+                        <td style="font-weight: bolder;">{{ account.credits }} </td>
+                        <tr>
+                            <td>Nombre de places réservées</td>
+                            <td>{{ nb_persons }} </td>
+                        </tr>
+                        <tr>
+                            <td>Prix/personne : </td>
+                            <td>{{ lesson.price }} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bolder;">Prix total</td>
+                            <td style="font-weight: bolder;">{{ meta.total_price }} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bolder;">Solde après réservation</td>
+                            <td style="font-weight: bolder;">{{ meta.next_credits }} </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
-
-
-
-
+        <div style="margin: 5% auto auto auto;" layout="column" flex="20">
+            <md-button
+                    ng-click="exitCancellation(lesson, account, nb_persons)"
+                    class="md-primary md-raised cy-button">
+                Retour
+            </md-button>
+            <md-button
+                    ng-click="processCancellation()"
+                    class="md-primary md-raised cy-button">
+                Annuler
+            </md-button>
+        </div>
     </div>
 </section>
 

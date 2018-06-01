@@ -1,11 +1,11 @@
 .yoga-panel-container{
-   padding-top: 5%;
-   font-family: "Poiret One";
+   padding-top: 0%;
+   font-family: "Montserrat";
 }
 
 .calendar-container{
-   margin-left: 5%;
-   margin-right: 5%;}
+   /*margin-left: 5%;
+   margin-right: 5%;*/}
 
 .calendar-container  h2{
    font-size: 120%;}
@@ -17,9 +17,20 @@
    font-size: 100%;
    font-transform: none;}
 
+.fc-toolbar .fc-center{
+   font-size:15px;
+   color: #574128;
+}
+
 .yoga-panel{
    width : 100%;
    font-size: 100%;
+   font-family: Montserrat;
+   color: #574128;
+}
+
+.yoga-panel *{
+   color: #574128;
 }
 
 .yoga-panel > h1{
@@ -41,6 +52,11 @@
 .yoga-user-info{
    width : 100%;
 }
+
+.yoga-user-info *{
+   color: #574128;
+}
+
 .yoga-user-info h2{
    font-size: 150%;
 }
@@ -56,19 +72,25 @@
    color: #137b72;
    text-decoration: none;
 }
-yoga-user-info > button{
 
+.fc-toolbar h2{
+   font-size: 180%;
 }
 
 .container-fluid{
    padding: 0;
 }
 
+#calendar td{
+   /*background-color: #ffffff;*/
+   font-weight: 200;
+   margin-top: 25%;
+}
+
 table, th , td  {
   text-align : center;
   border: 1px solid grey;
   border-collapse: collapse;
-  padding: 10px;
 }
 
 table a:hover md-icon{
@@ -102,22 +124,20 @@ table a:hover md-icon{
 .add-persons{
    margin-top: 2%;
 }
-.pending-reservation{
-   padding:5%;
-}
+
 .pending-reservation-flex-row{
   display: flex;
   flex-direction: row;
   flex-wrap : wrap;
   justify-content: space-between;
-  margin-left: 10%;
-  margin-right: 10%;
+  /*margin-left: 10%;
+  margin-right: 10%;*/
 }
 
 .pending-reservation-lesson{
-  padding : 10%;
-  margin-top: 30px;
-  border: 4px solid green;
+  padding : 10px;
+ /* margin-top: 30px;*/
+  border: 4px solid #137b72;
   border-radius: 15px;
   box-shadow: 10px 10px 15px 0px #3f3f3f;
   width:100%;
@@ -132,9 +152,10 @@ table a:hover md-icon{
   margin-top:5%;
 }
 
+/*
 .pending-reservation-button{
-  margin : 5% 30% 0% 30%;
-}
+  margin : 0% 30% 0% 30%;
+}*/
 
 .lesson-finished{
   background-color: #9a9ca0;
@@ -142,4 +163,74 @@ table a:hover md-icon{
 
 .table-header{
   background-color: #d4d8dd;
+}
+
+.formule-container{
+  margin-bottom: 5%;
+  min-width : 100%;
+}
+
+.formule{
+  margin : 2% 0 2% 0;
+  padding: 2%;
+  border: 1px solid #9a9ca0;
+  min-width : 100%;
+  width : 100%;
+}
+.last-formule{
+  margin-bottom: 5%;
+}
+
+.formule-details{
+  padding-left: 5%;
+}
+
+.input-form{
+  margin-top:2%;
+}
+
+.transaction-step{
+   /*border: 1px solid #3f3f3f;*/
+   margin: 0 10% 0 10%;
+   padding: 2%;
+   position : relative;
+   min-height : 50%;
+   min-width : 80%;
+}
+
+.transaction-step-error{
+  margin: 5% auto 0 auto;
+  max-width:50%;
+  outline: 1px solid red;
+  outline-offset: 15px;
+  color:red;
+}
+
+.transaction-step-success{
+  margin: 5% auto 0 auto;
+  max-width:50%;
+  outline: 1px solid green;
+  outline-offset: 15px;
+  color:green;
+}
+
+.transaction-button{
+  margin:20px 45% 0 45%;*/
+  /*margin:auto;*/
+  float:bottom;
+}
+
+.lesson-list-item{
+  margin: 5% 0 5% 0;
+  padding:2%;
+  border: 1px solid #3f3f3f;
+}
+
+.event-complete,
+.event-complete div,
+.event-complete span{
+   /*
+   border-color : red;
+   background-color: red;*/
+   border-width: medium;
 }

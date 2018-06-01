@@ -24,6 +24,7 @@
        /* Lesson API */
        getAllLessons: getAllLessons,
        getLesson: getLesson,
+
        /* Pre-confirmation reservation API */
        stageReservation: stageReservation,
        stagedReservationExit: stagedReservationExit,
@@ -50,6 +51,7 @@
        createLiveReservation : createLiveReservation,
        cancelReservation : cancelReservation,
        checkAccountPresent: checkAccountPresent,
+       updateNbPresent : updateNbPresent,
        allReservations : allReservations,
        getReservation: getReservation,
        getReservationsByAccount : getReservationsByAccount,
@@ -57,6 +59,12 @@
 
        /* Animators API */
        getAllAnimators: getAllAnimators,
+
+       /* Transactions API */
+       getAllFormulas : getAllFormulas,
+       tryReductionCode : tryReductionCode,
+       getTransactionsByAccount : getTransactionsByAccount,
+       proceedTransaction: proceedTransaction,
 
        /* General */
        locations : {"calendar":"/yoga/calendrier",
@@ -205,7 +213,8 @@
 
               YogaService.pendingReservationByAccount[account_id] = {lesson : lesson,
                                                                      account: account,
-                                                                     nb_persons : nb_persons};
+                                                                     nb_persons : nb_persons,
+                                                                     created : new Date()};
               /* Go to reservation page */
               $location.url(YogaService.locations["reservation"]);
            });
@@ -234,8 +243,11 @@
     * @returns {object|undefined} Events
     * @memberOf thinkster.reservations.services.Reservations
     */
-    function storeLocalePendingReservationByAccount(lesson, account, nb_persons) {
-        YogaService.pendingReservationByAccount[account.id] = {lesson : lesson, account: account, nb_persons : nb_persons};
+    function storeLocalePendingReservationByAccount(lesson, account, nb_persons, created) {
+        YogaService.pendingReservationByAccount[account.id] = {lesson : lesson,
+                                                               account: account,
+                                                               nb_persons : nb_persons,
+                                                               created : created};
     }
 
     /**
@@ -253,7 +265,10 @@
           if(success && (pendingReservation!=undefined) && (pendingReservation.length > 0) ){
              /* Go to reservation page */
              pendingReservation = pendingReservation[0];
-             YogaService.storeLocalePendingReservationByAccount(pendingReservation.lesson, account, pendingReservation.nb_personnes);
+             YogaService.storeLocalePendingReservationByAccount(pendingReservation.lesson,
+                                                                account,
+                                                                pendingReservation.nb_personnes,
+                                                                new Date(pendingReservation.created));
              $location.url(YogaService.locations["reservation"]);
           }
        });
@@ -339,6 +354,24 @@
           callback(true, []);
       },function(data, status, headers, config){
           alert("Impossible de cocher : ",account.email);
+          callback(false, ["Une erreur est survenue lors de la réservation"]);
+      });
+    }
+
+    /**
+    * @name updateNbPresent
+    * @desc Create a new Reservation
+    */
+    function updateNbPresent(lesson, account, nb_present, callback) {
+      console.log("UpdateNbPresent : ",lesson, account, nb_present);
+      return $http.post('api/v1/yoga/reservation/', {
+        lesson: lesson,
+        account: account,
+        nb_present: nb_present,
+      }).then(
+        function(data, status, headers, config){
+          callback(true, []);
+      },function(data, status, headers, config){
           callback(false, ["Une erreur est survenue lors de la réservation"]);
       });
     }
@@ -456,10 +489,58 @@
      function getAllAnimators(callback){
         return $http.get('api/v1/yoga/animators/').then(
           function(data, status, headers, config){
-            var animators = data.data;
-            callback(true, animators);
+            callback(true, data.data);
         },function(data, status, headers, config){
             callback(false, []);
+        });
+     }
+
+     /**********************
+      * Transactions API   *
+      **********************/
+     function getAllFormulas(callback){
+        return $http.get('api/v1/yoga/formule/').then(
+          function(data, status, headers, config){
+            callback(true, data.data);
+        },function(data, status, headers, config){
+            callback(false, []);
+        });
+     }
+
+     function tryReductionCode(code, callback){
+        return $http.post('api/v1/yoga/code-reduction/',{
+           code: code
+        }).then(
+          function(data, status, headers, config){
+            callback(true, data.data);
+        },function(data, status, headers, config){
+            callback(false, data.message);
+        });
+     }
+
+     function proceedTransaction(account_id, montant, token, callback){
+        return $http.post('api/v1/yoga/transaction/', {
+            account_id: account_id,
+            montant: montant,
+            token : token
+        }).then(
+           function(data, status, headers, config){
+              callback(true, []);
+           },
+           function(data, status, headers, config){
+              callback(false, ["Une erreur est survenue lors de la transaction"]);
+        });
+     }
+
+     function getTransactionsByAccount(account_id, callback){
+        return $http.get('api/v1/yoga/transaction/', {
+            params:{account_id: account_id}
+        }).then(
+           function(data, status, headers, config){
+              callback(true, data.data);
+           },
+           function(data, status, headers, config){
+              callback(false, ["Une erreur est survenue lors de la transaction"]);
         });
      }
   }

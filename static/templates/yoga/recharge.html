@@ -1,8 +1,291 @@
 <div ng-include="'/static/templates/general/navbar.html'"></div>
 
+<section class="text-container first-section">
+    <h1 style="margin-bottom : 5%;" class="text-centered page-title"> Recharger mon compte </h1>
+    <h4 ng-if="state.step_formule" class="text-centered">1/ Je choisis ma formule :</h4>
+    <h4 ng-if="state.step_code_reduction" class="text-centered">2/ Je rentre mon code de réduction :</h4>
+    <h4 ng-if="state.step_payment_summary" class="text-centered">3/ Mon résumé de transaction :</h4>
+    <h4 ng-if="state.step_card_info" class="text-centered">4/ Mes informations de paiement : </h4>
 
-<section class="text-container">
-    <h1> Recharger mon compte </h1>
+    <h4 ng-if="error" class="text-centered transaction-step-error">{{error}}</h4>
+</section>
+
+<section ng-if="state.step_formule" style="padding:0;">
+    <div class="text-container transaction-step" style="padding:0 10%;">
+        <md-radio-group class="formule-container" ng-model="data.montant_initial" ng-change="changeFormule()">
+            <div class="row formule" ng-repeat="formule in data.formules" ng-class="{'last-formule':$last}">
+                <md-radio-button
+                        aria-label="Choix de la formule"
+                        value="{{formule.montant}}"
+                        class="md-primary">
+                </md-radio-button>
+                <div class="formule-details">
+                    <h3> Formule {{formule.nb_cours}} Cours : {{formule.montant}} €</h3>
+                    <h4 style="font-style: italic; margin-top: 5%;"> {{formule.description}} </h4>
+                </div>
+            </div>
+        </md-radio-group>
+    </div>
+
+    <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72;"
+               ng-click="chooseFormula()"
+               ng-disabled="!data.montant_initial"
+               class="btn btn-primary transaction-button">
+        Suivant
+    </md-button>
+</section>
+
+
+<section ng-if="state.step_code_reduction">
+    <div class="text-container transaction-step" style="padding:0 10%;">
+        <h4 ng-if="data.reduction"
+            style="margin-bottom : 1%; color: green;"
+            class="text-centered"> Votre réduction : {{ data.reduction }} % !!</h4>
+
+        <md-input-container style="width:20%; margin:auto;" class="md-block">Code de Réduction
+            <label></label>
+            <input style="border : 1px solid #3f3f3f;"
+                   md-no-asterisk
+                   name="reduction"
+                   ng-model="data.code_reduction"
+                   aria-label="Code de Réduction"
+                   ng-change="tryReductionCode(data.code_reduction)">
+            <div ng-messages="data.$error">
+            </div>
+        </md-input-container>
+    </div>
+
+    <div class="row transaction-button">
+        <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                   ng-click="backToFormula()"
+                   class="btn btn-primary ">
+            Retour
+        </md-button>
+        <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                   ng-click="tryReductionCodeIfAny(data.code_reduction)"
+                   class="btn btn-primary">
+            Suivant
+        </md-button>
+    </div>
+
+</section>
+
+<section ng-if="state.step_payment_summary">
+    <div class="text-container transaction-step" style="padding:0 10%;">
+        <h4 ng-if="data.reduction"
+            style="margin-bottom : 1%; color: green;"
+            class="text-centered"> Votre réduction : {{ data.reduction }} % !!</h4>
+
+        <h4 class="text-centered">Montant : <span class="radioValue">{{ data.montant_initial }} €</span> </h4>
+        <h4 class="text-centered">Réduction : <span class="radioValue">{{ data.reduction }} % </span> </h4>
+        <h4 class="text-centered">Montant final: <span class="radioValue">{{ data.montant_final }} €</span> </h4>
+    </div>
+    <div class="row transaction-button">
+        <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                   ng-click="backToReductionCode()"
+                   class="btn btn-primary">
+            Retour
+        </md-button>
+        <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                   ng-click="gotoPaymentForm()"
+                   class="btn btn-primary">
+            Suivant
+        </md-button>
+    </div>
+</section>
+
+<section ng-if="state.step_card_info" class="text-container transaction-step">
+    <div  class="col-md-4 col-md-offset-4" style="margin:auto;">
+        <!-- Test ==> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999 -->
+        <form class="flexible-col" stripe-form="stripeCallback">
+            <div ng-if="checkoutForm.card.$invalid">Error: invalid card number!</div>
+            <md-input-container>
+                <input class="input-form"
+                       ng-model="number"
+                       placeholder="N° de carte"
+                       payments-format="card"
+                       payments-validate="card" />
+            </md-input-container>
+            <md-input-container>
+                <input class="input-form"
+                       ng-model="expiry"
+                       placeholder="Date d'expiration"
+                       payments-format="expiry"
+                       payments-validate="expiry" />
+            </md-input-container>
+            <md-input-container>
+                <input class="input-form"
+                       ng-model="cvc"
+                       placeholder="CVC"
+                       payments-format="cvc"
+                       payments-validate="cvc" />
+            </md-input-container>
+            <div class="row">
+                <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                           ng-click="backToPaymentSummary()"
+                           class="btn btn-primary">
+                    Retour
+                </md-button>
+                <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                           type="submit"
+                           ng-click="proceedTransaction()"
+                           class="btn btn-primary">
+                    Suivant
+                </md-button>
+
+            </div>
+        </form>
+    </div>
+</section>
+
+<section ng-if="state.step_payment_in_progress" class="text-container transaction-step">
+    <h4 class="text-centered" style="margin-bottom : 5%;">Transaction en cours</h4>
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular style="margin:auto;" ng-disabled="data.transaction_successful" md-mode="indeterminate"></md-progress-circular>
+    </div>
+
+</section>
+
+<section ng-if="state.step_payment_success" class="text-container transaction-step">
+
+    <h4 class="text-centered transaction-step-success">{{ success }}  </h4>
+    <md-button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+               ng-click="gotoCalendar()"
+               class="btn btn-primary transaction-button ">
+        Retour au calendrier des cours
+    </md-button>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section ng-if="false" class="text-container" style="margin-top : 0%;">
+    <div  class="row">
+        <div ng-if="!data.transaction_submitted" class="col-md-4">
+            <h4  class="text-centered"> Choisissez votre formule : </h4>
+            <md-radio-group class="formule-container" ng-model="data.montant_initial" ng-change="changeFormule()">
+                <md-radio-button ng-repeat="formule in data.formules"
+                                 value="{{formule.montant}}"
+                                 class="md-primary">
+                    <div class="formule">
+                        <h3> Formule {{formule.nb_cours}} Cours :</h3>
+                        <h3> {{formule.montant}} € </h3>
+                    </div>
+                </md-radio-button>
+            </md-radio-group>
+
+            <md-input-container style="max-width:50%;" class="md-block">Code de Réduction
+                <input style="border : 1px solid #3f3f3f;"
+                       md-no-asterisk
+                       name="reduction"
+                       ng-model="data.code_reduction"
+                       aria-label="Code de Réduction"
+                       ng-change="tryReductionCode(data.code_reduction)">
+                <div ng-messages="data.$error">
+                </div>
+            </md-input-container>
+
+            <h4>Montant : <span class="radioValue">{{ data.montant_initial }} €</span> </h4>
+            <h4>Réduction : <span class="radioValue">{{ data.reduction }} % </span> </h4>
+            <h4>Montant final: <span class="radioValue">{{ data.montant_final }} €</span> </h4>
+            <h4 ng-if="success" style="border:1px solid green; color:green;">{{ success}}  </h4>
+        </div>
+
+        <md-content class="md-padding card-container" layout-xs="column" layout="row">
+            <div class="" flex-xs flex-gt-xs="50" layout="column">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text style="width:100%;" fxLayout  fxLayoutAlign="space-between stretch">
+                            <span style="width:100%;" class="md-headline">Informations de carte</span>
+                        </md-card-title-text>
+                        <md-card-title-media>
+                            <div class="md-media-lg card-media"></div>
+                        </md-card-title-media>
+                    </md-card-title>
+                    <md-card-content>
+                        <h4 style="margin-top:10%"> Test ===> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999</h4>
+                        <form class="flexible-col" stripe-form="stripeCallback">
+                            <div ng-if="checkoutForm.card.$invalid">Error: invalid card number!</div>
+                            <md-input-container>
+                                <input class="input-form"
+                                       ng-model="number"
+                                       placeholder="N° de carte"
+                                       payments-format="card"
+                                       payments-validate="card" />
+                            </md-input-container>
+                            <md-input-container>
+                                <input class="input-form"
+                                       ng-model="expiry"
+                                       placeholder="Date d'expiration"
+                                       payments-format="expiry"
+                                       payments-validate="expiry" />
+                            </md-input-container>
+                            <md-input-container>
+                                <input class="input-form"
+                                       ng-model="cvc"
+                                       placeholder="CVC"
+                                       payments-format="cvc"
+                                       payments-validate="cvc" />
+                            </md-input-container>
+                            <md-card-actions layout="row" layout-align="end center">
+                                <md-button type="submit">Procéder</md-button>
+                            </md-card-actions>
+                            <md-button type="submit">Submit</md-button>
+                        </form>
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button type="submit">Procéder</md-button>
+                    </md-card-actions>
+                </md-card>
+            </div>
+        </md-content>
+
+
+
+        <div  class="col-md-4 col-md-offset-4" style="margin-left:20%;">
+
+            <!-- Test ==> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999 -->
+            <h4 style="margin-top:10%"> Test ===> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999</h4>
+            <form class="flexible-col" stripe-form="stripeCallback">
+                <div ng-if="checkoutForm.card.$invalid">Error: invalid card number!</div>
+                <input class="input-form"
+                       ng-model="number"
+                       placeholder="Card Number"
+                       payments-format="card"
+                       payments-validate="card" />
+                <input class="input-form"
+                       ng-model="expiry"
+                       placeholder="Expiration"
+                       payments-format="expiry"
+                       payments-validate="expiry" />
+                <input class="input-form"
+                       ng-model="cvc"
+                       placeholder="CVC"
+                       payments-format="cvc"
+                       payments-validate="cvc" />
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</section>
+<section ng-if="false"  style="margin-top : 10%;" class="text-container">
+    <h4 ng-if="!data.transaction_successful"  class="text-centered" style="margin-bottom : 5%;">Transaction en cours</h4>
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular ng-disabled="data.transaction_successful" md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <h4 class="text-centered" ng-if="success" style="max-width:25%; border:1px solid green; color:green; margin:auto;">{{ success}}  </h4>
 </section>
 
 <div ng-include="'/static/templates/general/footer.html'"></div>

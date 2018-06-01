@@ -24,7 +24,11 @@
        getCarte: getCarte,
        getConfig: getConfig,
        allReservations : allReservations,
-       createReservation : createReservation
+       createReservation : createReservation,
+       displayText : displayText,
+       getDisplayStates : getDisplayStates,
+       displayStates : {'nosproducteurs' : true,
+                     'notrecharte' : false }
     }
 
     return RestaurantService;
@@ -98,6 +102,21 @@
 
     function getConfig(){
        return $http.get('/api/v1/restaurant/config/');
+    }
+
+    function displayText(section){
+       Object.keys(RestaurantService.displayStates).forEach(function(key) {
+           if(key === section){
+              RestaurantService.displayStates[key] = true;
+           }else{
+              RestaurantService.displayStates[key] = false;
+           }
+           console.log(key, RestaurantService.displayStates[key]);
+       });
+    }
+
+    function getDisplayStates(){
+       return RestaurantService.displayStates;
     }
   }
 })();

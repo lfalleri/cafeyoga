@@ -1,8 +1,13 @@
 #carte{
-  font-size: 25px;
+  font-size: 20px;
 }
+#carte *{
+   font-family: "Montserrat";
+   color: #5D3B0A;
+}
+
 .restaurant-categorie{
-  font-size: 180%;
+  font-size: 20px;
   font-weight: 500;
   text-align : center;
   position: relative;
@@ -10,25 +15,26 @@
 .restaurant-categorie:before{
     content: '';
     width: 100%;
-    border-bottom: solid 1px #3f3f3f;
+    border-bottom: dotted 1px #5D3B0A;
     position: absolute;
     left: 0;
-    top: 50%;
+    top: 40%;
     z-index: 0;
 }
 
-.restaurant-categorie > h1{
-    background-color: #f2f2f2;
+.restaurant-categorie  h2{
+    /*background-color: #f2f2f2;*/
     z-index: 3;
     width: auto;
     display: inline-block;
     padding: 0 20px 0 20px;
     position: relative;
     text-align : center;
+    font-size: 25px;
 }
 
 .restaurant-specificite{
-  font-size: 100%;
+  font-size: 80%;
   font-weight: 700;
 }
 
@@ -54,11 +60,11 @@
   width: 100%;
   height: 0;
   line-height: 0;
-  border-bottom: 1px dotted #3f3f3f;
+  border-bottom: dotted 1px #5D3B0A;
 }
 
 .restaurant-plat-ingredients{
-  background-color: #f2f2f2;
+  /*background-color: #f2f2f2;*/
   padding-right: 15px;
   font-size: 90%;
   font-style: italic;
@@ -67,7 +73,7 @@
 }
 
 .restaurant-plat-prix{
-  background-color: #f2f2f2;
+ /* background-color: #f2f2f2;*/
   padding-left: 15px;
   float: right;
   font-size: 90%;
@@ -102,7 +108,7 @@
   font-size: 100%;
   font-weight: 100;
   z-index:2;
-  background-color: #f2f2f2;
+  /*background-color: #f2f2f2;*/
   padding-right : 3%;
 }
 

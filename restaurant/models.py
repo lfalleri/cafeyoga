@@ -53,6 +53,9 @@ class Specificite(models.Model):
 
 
 class Plat(models.Model):
+    class Meta:
+        ordering = ('categorie', 'specificite', 'denomination',)
+
     carte = models.ForeignKey(Carte, default=DEFAULT_CARTE_ID, related_name="plats")
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     specificite = models.ForeignKey(Specificite, on_delete=models.CASCADE)

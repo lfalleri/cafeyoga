@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
 import json
 from rest_framework import permissions, views, status, viewsets, generics
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import render
-from .models import Lesson, Reservation, ReservationManager, Professeur
+from .models import Lesson,\
+                    Reservation,\
+                    Professeur, \
+                    Transaction, \
+                    Formule,\
+                    CodeReduction
+
 from authentication.models import Account
-from .serializers import LessonSerializer, ReservationSerializer, ProfesseurSerializer
-from .permissions import IsAuthorOfReservation
-from django.contrib.admin.views.decorators import staff_member_required
-import time
+
+from .serializers import LessonSerializer, \
+                         ReservationSerializer, \
+                         ProfesseurSerializer, \
+                         TransactionSerializer,\
+                         FormuleSerializer,\
+                         CodeReductionSerializer
+
+import stripe
 from datetime import datetime
 import pytz
+
 
 class CalendarView(views.APIView):
     serializer_class = LessonSerializer
@@ -39,7 +49,6 @@ class LessonView(views.APIView):
 
         for i,_ in enumerate(queryset):
             pending_reservations = Reservation.objects.filter(lesson=queryset[i], confirmed=False)
-            #print("Pending reservation for lesson : %s  ----> %s"%(queryset[i], pending_reservations))
             if pending_reservations:
                 for pending_reservation in pending_reservations:
                     d2 = datetime.strptime(pending_reservation.created.strftime(fmt), fmt)
@@ -50,7 +59,6 @@ class LessonView(views.APIView):
                     else:
                         queryset[i].nb_places -= pending_reservation.nb_personnes
 
-        #print("New queryset : %s  " % (queryset))
         new_queryset = queryset[:]
         serialized = LessonSerializer(new_queryset, many=True)
         return Response(serialized.data)
@@ -61,16 +69,12 @@ class ReservationView(views.APIView):
 
     def post(self, request, format=None):
         data = json.loads(request.body)
-        print("ReservationView->post :  %s" % data)
         account_id = data['account']['id']
         lesson_id = data['lesson']['id']
-        print("2 ReservationView->post : account :  %d" % account_id)
-        print("2 ReservationView->post : lesson : %d" % lesson_id)
+
         # Get objects account and event
         lesson = Lesson.objects.get(id=lesson_id)
         account = Account.objects.get(id=account_id)
-        print("2 ReservationView->post : account :  %s" % account)
-        print("2 ReservationView->post : lesson : %s" % lesson)
 
         credit = 0
         debit = 0
@@ -79,12 +83,23 @@ class ReservationView(views.APIView):
             reservation = Reservation.objects.filter(account=account, lesson=lesson, confirmed=True)
             reservation = reservation[0]
             reservation.checked_present = data['present']
+            if reservation.checked_present:
+                reservation.nb_present = reservation.nb_personnes
+            reservation.save()
+            serialized = ReservationSerializer(reservation)
+            return Response(serialized.data)
+
+        if 'nb_present' in data.keys():
+            reservation = Reservation.objects.filter(account=account, lesson=lesson, confirmed=True)
+            reservation = reservation[0]
+            reservation.nb_present = data['nb_present']
+            if reservation.nb_present == reservation.nb_personnes:
+                reservation.checked_present = True
             reservation.save()
             serialized = ReservationSerializer(reservation)
             return Response(serialized.data)
 
         nb_persons = data['nb_persons']
-        print("2/ReservationView->post %d" %nb_persons)
         if lesson.nb_places < nb_persons:
             return Response({
                 'status': 'Unauthorized',
@@ -92,7 +107,6 @@ class ReservationView(views.APIView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
         if 'credit' in data.keys() and 'debit' in data.keys():
-            print("ReservationView->post :  %s"%data)
             # Live reservation
             credit = int(data['credit'])
             debit = int(data['debit'])
@@ -106,18 +120,13 @@ class ReservationView(views.APIView):
                     }, status=status.HTTP_401_UNAUTHORIZED)
 
                 reservation = Reservation.objects.create_reservation(lesson, account, nb_persons, True)
-                print("ReservationView->post : reservation= %s"% reservation)
                 serialized = ReservationSerializer(reservation)
-                print("2/= credit ")
+
                 # Update account and lesson
                 account.credits += credit - (lesson.price * nb_persons)
-                print("3/= ")
                 account.save()
-                print("ReservationView->post : new account= %s" % account)
                 lesson.nb_places -= nb_persons
                 lesson.save()
-                print("ReservationView->post : new lesson= %s" % lesson)
-                print("ReservationView->post : serialized.data= %s" % serialized.data)
                 return Response(serialized.data)
             else:
                 return Response({
@@ -184,11 +193,9 @@ class PendingReservationView(views.APIView):
 
     def post(self, request, format=None):
         data = json.loads(request.body)
-        print("PendingReservationView->post :  %s" % data)
         lesson_id = data['lesson']['id']
         account_id = data['account']['id']
         nb_places = data['nb_pending_reservations']
-        print("2 PendingReservationView->post : lesson : %d / nb_places : %d" %(lesson_id, nb_places))
 
         lesson = Lesson.objects.get(id=lesson_id)
         if not lesson:
@@ -204,22 +211,16 @@ class PendingReservationView(views.APIView):
                 'message': "Utilisateur non trouvé"
             }, status=status.HTTP_404_NOT_FOUND)
 
-        print("3/ PendingReservationView->post ")
-
         if nb_places > lesson.nb_places:
             return Response({
                 'status': 'Unauthorized',
                 'message': "Plus assez de places restantes"
             }, status=status.HTTP_401_UNAUTHORIZED)
 
-        print("4/ PendingReservationView->post ")
         pending_reservation = Reservation.objects.filter(lesson=lesson, account=account, confirmed=False)
         if not pending_reservation:
-            print("Creating new PendingReservation")
             pending_reservation = Reservation.objects.create_reservation(lesson, account, nb_places, False)
-            print("pending_reservation :%s"%pending_reservation)
         else:
-            print("Existing pending_reservation :%s" % pending_reservation)
             pending_reservation = pending_reservation[0]
             pending_reservation.nb_personnes += nb_places
             if pending_reservation.nb_personnes > lesson.nb_places:
@@ -227,25 +228,17 @@ class PendingReservationView(views.APIView):
                     'status': 'Unauthorized',
                     'message': "Plus assez de places restantes"
                 }, status=status.HTTP_401_UNAUTHORIZED)
-            print("5/ pending_reservation :%s" % pending_reservation)
             pending_reservation.save()
-        print("6/ Existing pending_reservation :%s" % pending_reservation)
         serialized = ReservationSerializer(pending_reservation)
         return Response(serialized.data)
 
     def delete(self, request, format=None):
-        print("PendingReservationView")
-        print("PendingReservationView-> delete :%s" % request.query_params)
         lesson_id = request.query_params['lesson_id']
         lesson = Lesson.objects.get(id=lesson_id)
-        print("PendingReservationView-> delete lesson:%s" % lesson)
-
         account_id = request.query_params['account_id']
         account = Account.objects.get(id=account_id)
 
-        print("PendingReservationView-> delete account:%s" % account)
         nb_places = int(request.query_params['nb_pending_reservations'])
-        print("PendingReservationView-> delete --> lesson :%s / nb_pending_reservations:%d" % (lesson, nb_places))
         pending_reservation = Reservation.objects.filter(lesson=lesson, account=account, confirmed=False)
         if not pending_reservation:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -271,8 +264,6 @@ class PendingReservationView(views.APIView):
             if not lesson:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-        print("PendingReservationView-> get --> lesson :%s / account:%s" % (lesson, account))
-
         if lesson and account:
             reservations = Reservation.objects.filter(account=account, lesson=lesson, confirmed=False)
             if not reservations:
@@ -282,54 +273,96 @@ class PendingReservationView(views.APIView):
         elif not lesson and account:
             reservations = Reservation.objects.filter(account=account, confirmed=False)
 
-        print("reservations->  :%s " % (reservations))
         serialized = ReservationSerializer(reservations, many=True)
-        print("serialized->  :%s " % (serialized.data))
         return Response(serialized.data)
 
 
 class ProfesseursView(views.APIView):
     def get(self, request, format=None):
         queryset = Professeur.objects.all()
-        print("ProfesseursView -> get : queryset=%s"%queryset)
         serialized = ProfesseurSerializer(queryset, many=True)
         return Response(serialized.data)
 
 
-@staff_member_required
-def adminReservationsView():
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)
 
-from functools import update_wrapper
-from django.contrib import admin
-from django.conf.urls import url
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+class FormuleView(views.APIView):
+
+    def get(self, request, format=None):
+        queryset = Formule.objects.all()
+        print("Formules : %s"%queryset)
+        serialized = FormuleSerializer(queryset, many=True)
+        return Response(serialized.data)
 
 
-class ReservationsAdmin(admin.ModelAdmin):
-    review_template = '/static/templates/yoga/reservation.html'
+class CodeReductionView(views.APIView):
 
-    def get_urls(self):
-        def wrap(view):
-            def wrapper(*args, **kwargs):
-                return self.admin_site.admin_view(view)(*args, **kwargs)
-            wrapper.model_admin = self
-            return update_wrapper(wrapper, view)
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        print("CodeReductionView->post :  %s" % data)
+        code = data['code']
 
-        urls = super(ReservationsAdmin, self).get_urls()
+        code_reduction = CodeReduction.objects.filter(code=code)
+        if code_reduction:
+            code_reduction = code_reduction[0]
+            serialized = CodeReductionSerializer(code_reduction)
+            return Response(serialized.data)
+        else:
+            return Response({
+                'status': 'Unauthorized',
+                'message': "Code de réduction non valide"
+            }, status=status.HTTP_404_NOT_FOUND)
 
-        my_urls = [
-            url(r'yoga/reservations/$', wrap(self.review), name='reservations'),
-        ]
 
-        return my_urls + urls
+class TransactionView(views.APIView):
 
-    def review(self, request, id):
-        entry = Reservation.objects.get(pk=id)
+    def get(self, request, format=None):
+        account = None
+        transactions = []
 
-        return render_to_response(self.review_template, {}, context_instance=RequestContext(request))
+        if 'account_id' in request.query_params.keys():
+            account_id = request.query_params['account_id']
+            account = Account.objects.get(id=account_id)
+        if not account:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-admin.site.register(Reservation, ReservationsAdmin)
+        transactions = Transaction.objects.filter(account=account)
+        serialized = TransactionSerializer(transactions, many=True)
+        return Response(serialized.data)
+
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        account_id = data['account_id']
+        montant = data['montant']
+        token = data['token']
+
+        stripe.api_key = "sk_test_ZgA3fIz8UXgmhZpwXg8Aej5V"
+
+        account = Account.objects.get(id=account_id)
+        if not account:
+            return Response({
+                'status': 'Unauthorized',
+                'message': "Utilisateur non trouvé"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+           # Charge the user's card:
+           charge = stripe.Charge.create(
+              amount=montant*100,
+              currency="eur",
+              description=account.first_name+ " "+ account.last_name,
+              source=token,
+           )
+        except Exception as inst:
+           return Response({
+               'status': 'Unauthorized',
+               'message': "La transaction a échoué"
+           }, status=status.HTTP_401_UNAUTHORIZED)
+
+        transaction = Transaction.objects.create_transaction(account, montant, token)
+        transaction.save()
+
+        account.credits += int(montant)
+        account.save()
+
+        serialized = TransactionSerializer(transaction)
+        return Response(serialized.data)

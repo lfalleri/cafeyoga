@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from django.utils import timezone
 import dj_database_url
 import os
 import locale
@@ -44,6 +43,7 @@ INSTALLED_APPS = (
     'authentication',
     'yoga',
     'restaurant',
+    'boutique',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -95,24 +95,25 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+CLIENT_BASE_DIR = os.path.join(BASE_DIR, '../client')
+
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
-
-#STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
-#STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
+
+
 
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 
@@ -124,8 +125,6 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'static/templates/general'),
 )
 
-
-print(TEMPLATE_DIRS)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -145,3 +144,6 @@ ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'authentication.Account'
 AUTH_PROFILE_MODULE = 'authentication.Account'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'img')

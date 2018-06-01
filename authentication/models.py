@@ -18,10 +18,10 @@ class AccountManager(BaseUserManager):
             first_name=kwargs.get('first_name'),
             last_name=kwargs.get('last_name'),
         )
-
+        print('Account : %s'%account)
         account.set_password(password)
         account.save()
-
+        print('Account save %s'%account)
         return account
 
     def create_superuser(self, email, password, **kwargs):

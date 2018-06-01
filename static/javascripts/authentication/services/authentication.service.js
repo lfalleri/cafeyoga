@@ -9,13 +9,13 @@
     .module('cafeyoga.authentication.services')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$cookies', '$http', '$rootScope'];
+  Authentication.$inject = ['$cookies', '$http', '$rootScope','$location'];
 
   /**
   * @namespace Authentication
   * @returns {Factory}
   */
-  function Authentication($cookies, $http, $rootScope, $window) {
+  function Authentication($cookies, $http, $rootScope, $location) {
     /**
     * @name Authentication
     * @desc The Factory to be returned
@@ -27,12 +27,15 @@
       logout: logout,
       register: register,
       updateProfile : updateProfile,
+      crediteProfile: crediteProfile,
       setAuthenticatedAccount: setAuthenticatedAccount,
       unauthenticate: unauthenticate,
       getFullAccount: getFullAccount,
       isStaff: isStaff,
       fullAccount : {},
       getUsers: getUsers,
+
+      gotoLogin : gotoLogin,
     };
 
     return Authentication;
@@ -48,7 +51,7 @@
     * @returns {Promise}
     * @memberOf thinkster.authentication.services.Authentication
     */
-    function register(email, password,last_name, first_name) {
+    function register(email, password,last_name, first_name, callback) {
       return $http.post('/api/v1/accounts/', {
         password: password,
         email: email,
@@ -61,7 +64,12 @@
       * @desc Log the new user in
       */
       function registerSuccessFn(data, status, headers, config) {
-        Authentication.login(email, password);
+        Authentication.login(email, password, false, function(success, message){
+           if(success){
+              $location.url("/settings");
+           }
+        });
+
       }
 
       /**
@@ -81,7 +89,7 @@
     * @returns {Promise}
     * @memberOf thinkster.authentication.services.Authentication
     */
-    function login(email, password) {
+    function login(email, password, back, callback) {
        return $http.post('/api/v1/auth/login/', {
           email: email, password: password
        }).then(loginSuccessFn, loginErrorFn);
@@ -97,7 +105,8 @@
             window.localStorage.setItem('fullAccount', JSON.stringify(fullAccount));
             Authentication.fullAccount = fullAccount;
         });
-        $rootScope.back();
+        if(back) $rootScope.back();
+        callback(true,"Connection réussie");
       }
 
       /**
@@ -105,7 +114,7 @@
        * @desc Log "Epic failure!" to the console
        */
       function loginErrorFn(data, status, headers, config) {
-        alert('Email ou mot de passe invalide');
+        callback(false,"Email ou mot de passe invalide");
       }
     }
 
@@ -115,7 +124,7 @@
      * @returns {Promise}
      * @memberOf thinkster.authentication.services.Authentication
      */
-    function logout() {
+    function logout(back) {
        return $http.post('/api/v1/auth/logout/')
           .then(logoutSuccessFn, logoutErrorFn);
 
@@ -128,7 +137,9 @@
          Authentication.fullAccount = {};
          window.localStorage.removeItem('fullAccount');
          //window.location = '/';
-         $rootScope.back();
+         if(back){
+            $rootScope.back();
+         }
        }
 
        /**
@@ -157,6 +168,25 @@
           password: password
        }).then(function(data, status, headers, config){
           callback(true,"Profil mis à jour");
+       }, function(data, status, headers, config){
+          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+       });
+    }
+
+    /**
+    * @name login
+    * @desc Try to log in with email `email` and password `password`
+    * @param {string} email The email entered by the user
+    * @param {string} password The password entered by the user
+    * @returns {Promise}
+    * @memberOf thinkster.authentication.services.Authentication
+    */
+    function crediteProfile(account, credit, callback) {
+       return $http.post('/api/v1/auth/update-profile/', {
+          account_id: account.id,
+          credit:credit,
+       }).then(function(data, status, headers, config){
+          callback(true,"Compte rechargé");
        }, function(data, status, headers, config){
           callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
        });
@@ -267,6 +297,10 @@
          },function(data, status, headers, config){
            callback(false, []);
        });
+    }
+
+    function gotoLogin(){
+        $location.url("/login");
     }
   }
 })();

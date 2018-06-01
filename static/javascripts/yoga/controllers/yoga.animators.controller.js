@@ -29,8 +29,6 @@
                }
                $scope.animators = animators;
             });
-
-
          });
      }
   }

@@ -34,6 +34,7 @@
                      return;
                   }
                   console.log(" pendingReservation : ",pendingReservation);
+                  var now = new Date();
 
                   var start = new Date(pendingReservation.lesson.date);
                   $scope.lesson = pendingReservation.lesson;
@@ -46,17 +47,22 @@
                   $scope.meta.nb_places = $scope.lesson.nb_places;
                   $scope.meta.total_price = $scope.nb_persons * $scope.lesson.price;
                   $scope.meta.next_credits = $scope.account.credits - ($scope.nb_persons * $scope.lesson.price);
-
-                  timer = window.setTimeout(expiredReservation, 1000 * 60 * 15  ); // 15min
+                  $scope.meta.remaining_time = 15 - Math.floor((((now-pendingReservation.created) % 86400000) % 3600000) / 60000);
+                  timer = window.setTimeout(expiredReservation, 1000 * 60  ); // 1min
                });
             }
          });
      }
 
      function expiredReservation(){
-        alert("Votre réservation a expiré, veuillez recommencer une nouvelle réservation\n");
-        YogaService.stagedReservationExit(true, $scope.account, true);
-        $scope.reservationSuccessful = false;
+        $scope.meta.remaining_time--;
+        if($scope.meta.remaining_time <= 0){
+           alert("Votre réservation a expiré, veuillez recommencer une nouvelle réservation\n");
+           YogaService.stagedReservationExit(true, $scope.account, true);
+           $scope.reservationSuccessful = false;
+        }
+        $scope.$apply();
+
      }
 
      $scope.processReservation = function(lesson, account, nb_persons){

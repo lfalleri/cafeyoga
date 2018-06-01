@@ -1,7 +1,20 @@
-<footer class="footer">
-    <div class="footer-links flex-column">
-        <a class="footer-link" href="/presentation">Qui sommes nous ?</a>
-        <a class="footer-link" href="/galerie">Galerie photos</a>
-        <a class="footer-link" href="/contact">Contact</a>
+<footer class="cy-footer" layout layout-align="space-between center"
+        style="background-color:#879860;/*#BBCB90;*/">
+    <div layout-gt-sm="column" layout-align-gt-sm="space-between start"
+         layout="row" layout-align="space-between center"
+         class="cy-footer-links">
+        <a class="cy-footer-link montserrat-md" href="/presentation">Qui sommes nous ?</a>
+        <a hide-xs class="cy-footer-link montserrat-md" href="/galerie">Galerie photos</a>
+        <a class="cy-footer-link montserrat-md" href="/contact">Contact</a>
+        <a hide-gt-sm class="cy-footer-link montserrat-md" href="/contact">Mentions légales</a>
+    </div>
+
+    <div hide-sm hide-xs layout="column" layout-align="space-between end" class="cy-footer-links">
+        <div layout layout-align="space-between end">
+            <a href="#" class="fa fa-facebook cy-footer-link" style="margin-left:15px;"></a>
+            <a href="#" class="fa fa-instagram cy-footer-link" style="margin-left:15px;"></a>
+            <a href="/contact" class="fa fa-google cy-footer-link" style="margin-left:15px;" ></a>
+        </div>
+        <a href="/" style="margin:20% 0 0 0;" class="cy-footer-link">Mentions légales</a>
     </div>
 </footer>

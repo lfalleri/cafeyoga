@@ -49,21 +49,26 @@
 
          /* A partir d'aujourdhui, jusque dans 30 jours, on cherche à construire :
               la liste des jours d'ouvertures ->
-                  [{index:index1, locale: date1.locale(fr)}, {index:index2, locale: date2.locale(fr)},...] (n elements, n<7)
+                  [{index:index1, locale: date1.locale(fr)}, {index:index2, locale: date2.locale(fr)},...] (n elements)
+                  (ex : [{index:0,date:20180323T12:00:00,locale:"vendredi 23 mars 2018"},
+                         {index:1,date:20180522T12:00:00,locale:"vendredi 22 mai 2018"},
+                         ....]
+
             + la liste correspondantes des slots d'ouverture ->
                   [[11:30,12:00,12:30,...], [10:30,11:00,...], ...] (n elements)
          */
+         console.log("config : ",config);
          for(var jour = 0; jour < 30 ; jour++){
            /* date sera le jour courant */
            var date = new Date().addDays(jour);
+           var closure_day = false;
 
-           /* Les jours de fermeture exceptionnelle ne sont pas rajoutés dans la liste à afficher */
-           for (var fermeture = 0; fermeture<fermetures.length; fermeture++){
-              var fermeture_start = new Date(fermetures[fermeture]["debut"]);
-              var fermeture_end = new Date(fermetures[fermeture]["fin"]);
+            /* Les jours de fermeture exceptionnelle ne sont pas rajoutés dans la liste à afficher */
+            for (var fermeture = 0; fermeture<fermetures.length; fermeture++){
+               var fermeture_start = new Date(fermetures[fermeture]["debut"]);
+               var fermeture_end = new Date(fermetures[fermeture]["fin"]);
 
-              if( (date >= fermeture_start) && (date<=fermeture_end)){
-                  console.log("date : ", date.getDate() ,"/ fermeture_start : ", fermeture_start.getDate(),"/ fermeture_end : ", fermeture_end.getDate())
+               if( (date >= fermeture_start) && (date<=fermeture_end)){
                   /* On met les jours de fermetures dans une liste spéciale pour pouvoir les afficher */
                   if(!(fermeture_start in $scope.fermetures_days)){
                      $scope.fermetures_days.push(fermeture_start.toLocaleDateString('fr-FR', options));
@@ -71,48 +76,48 @@
                         $scope.fermetures_days.push(fermeture_end.toLocaleDateString('fr-FR', options));
                      }
                   }
-              }
-              else{
-                  for(var j=0;j<jours.length;j++){
-                     /* On regarde si le jour courant est un jour d'ouverture normale */
-                     if( jours[j]["weekday"] == date.getDay()){
+                  closure_day = true;
+                  break;
+               }
+            }
+            if(closure_day) break;
 
-                        var year = date.getFullYear();
-                        var month = date.getMonth();
-                        var day = date.getDate();
-                        var slots_for_day = [];
-                        $scope.slots_dict = {};
-                        $scope.slots_dict[date] = [];
+            /* date n'est pas un jour de fermeture exceptionnelle */
+            for(var j=0;j<jours.length;j++){
+               /* On regarde si le jour courant est un jour d'ouverture normale */
+               if( jours[j]["weekday"] == date.getDay()){
+                  var year = date.getFullYear();
+                  var month = date.getMonth();
+                  var day = date.getDate();
+                  var slots_for_day = [];
+                  $scope.slots_dict = {};
+                  $scope.slots_dict[date] = [];
 
-                        /* slots est la liste de slots d'ouverture défini dans la config */
-                        var slots = jours[j]["slots"];
+                  /* slots est la liste de slots d'ouverture défini dans la config */
+                  var slots = jours[j]["slots"];
 
-                        /* Pour chaque slot dans la config, on va le découper en tranche de 30 min */
-                        for (var slot = 0; slot < slots.length ; slot++){
-                            var from = slots[slot]["from_hour"];
-                            var to   = slots[slot]["to_hour"];
-                            var tmp_start_date = moment(new Date(year, month,day,from.split(":")[0],from.split(":")[1]));
-                            var tmp_end_date = moment(new Date(year, month,day,to.split(":")[0],to.split(":")[1]));
+                  /* Pour chaque slot dans la config, on va le découper en tranche de 30 min */
+                  for (var slot = 0; slot < slots.length ; slot++){
+                     var from = slots[slot]["from_hour"];
+                     var to   = slots[slot]["to_hour"];
+                     var tmp_start_date = moment(new Date(year, month,day,from.split(":")[0],from.split(":")[1]));
+                     var tmp_end_date = moment(new Date(year, month,day,to.split(":")[0],to.split(":")[1]));
 
-                            while(tmp_start_date < tmp_end_date){
-                                slots_for_day.push(tmp_start_date.format("HH:mm"));
-                                tmp_start_date = moment(tmp_start_date).add(30, 'minutes');
-                            }
-                        }
-                        $scope.all_days_hours.push(slots_for_day);
-                        $scope.select_day_list.push({index:index, date : date, locale : date.toLocaleDateString('fr-FR', options)});
-                        $scope.select_day_dict[date.toLocaleDateString('fr-FR', options)] = {
+                     while(tmp_start_date < tmp_end_date){
+                        slots_for_day.push(tmp_start_date.format("HH:mm"));
+                        tmp_start_date = moment(tmp_start_date).add(30, 'minutes');
+                     }
+                  }
+                  $scope.all_days_hours.push(slots_for_day);
+                  $scope.select_day_list.push({index:index, date : date, locale : date.toLocaleDateString('fr-FR', options)});
+                  $scope.select_day_dict[date.toLocaleDateString('fr-FR', options)] = {
                                                                                       index:index,
                                                                                       date : date,
                                                                                       locale : date.toLocaleDateString('fr-FR', options)
                                                                                       };
-                        index++;
-
-                     }
-
-                  }
-              }
-           }
+                  index++;
+               }
+            }
          }
 
          for(var i = 1 ; i <= 30 ; i++ ){

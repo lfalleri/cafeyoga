@@ -1,65 +1,234 @@
-<div class="row">
-    <div class="col-md-16 col-md-offset-16">
-        <div class="container-fluid landingpage-container-square">
-           <div class="row flex-container">
-                <div class="col-md-4 col-sm-6 portfolio-item top left">
-                    <a class="portfolio-link" data-toggle="modal" href="/restaurant">
-                        <div class="portfolio-hover"></div>
-                        <img class="img-fluid" src="/static/img/restaurant-carre.jpg" alt="Restaurant">
-                        <div class="portfolio-centered">Restaurant</div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-3 center flex-column">
-                    <a class="logo-link" href="/">
-                        <img class="img-fluid logo" src="/static/img/logo.png" alt="CafeYoga">
-                    </a>
-                    <div class="center links-container">
-                        <a class="landingpage-link" href="/presentation">Qui Sommes Nous?</a>
-                        <a class="landingpage-link" href="/galeriephotos">Galerie Photo</a>
-                        <a class="landingpage-link" href="/contact">Contact</a>
-                    </div>
-
-                </div>
-                <div class="col-md-4 col-sm-6 portfolio-item top right">
-                    <a class="portfolio-link" data-toggle="modal" href="/yoga/calendrier">
-                        <div class="portfolio-hover"></div>
-                        <img class="img-fluid" src="/static/img/yoga-carre.jpeg" alt="Yoga">
-                        <div class="portfolio-centered">Yoga</div>
-                    </a>
-                </div>
-
-           </div>
-
-           <div class="row flex-container">
-                <div class="col-md-4 col-sm-6 portfolio-item bottom left">
-                    <a class="portfolio-link" data-toggle="modal" href="">
-                        <div class="portfolio-hover"></div>
-                        <img class="img-fluid" src="/static/img/evenement-carre.jpg" alt="Evenement">
-                        <div class="portfolio-centered">Evènements</div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-3 center bottom flex-column">
-                    <a class="personal-space-link center" href="/">Mon Espace</a>
-                    <div class="landingpage-footer">
-                        <div class="center icons-container">
-                          <a href="#" class="center fa fa-instagram fa-2x"></a>
-                          <a href="#" class="center fa fa-facebook fa-2x"></a>
-                          <a href="#" class="center fa fa-twitter fa-2x"></a>
-                          <a href="#" class="center fa fa-youtube fa-2x"></a>
+<div class="fullsize-fixed" ng-controller="LandingPageController as vm">
+    <div class="fullsize-contour-white">
+        <div class="fullsize-contour-marron">
+            <div hide-xs hide-sm hide-md class="fullsize-container" layout="column">
+                <div layout="row" layout-align="space-around center"  style="height:100%;">
+                    <div layout="column" flex="35" layout-align="space-between end" style="min-height:100%;">
+                        <div class="landingpage-item">
+                            <a class="portfolio-link" data-toggle="modal" href="/restaurant/nosproduits">
+                                <div class="portfolio-hover" ></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_restaurant.jpg" alt="Restaurant">
+                                <div class="portfolio-centered">Restaurant</div>
+                            </a>
                         </div>
-                        <a class="mentions-link" href="/mentionslegales">Mentions Légales</a>
+                        <div class="landingpage-item">
+                            <a class="portfolio-link" data-toggle="modal" href="/boutique/createurs">
+                                <div class="portfolio-hover"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_boutique.jpg" alt="Exposition">
+                                <div class="portfolio-centered">Boutique & Expositions</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="column" flex="15" flex-offset="0" layout-align="space-between center"
+                         style="font-family:Tillana;background-color: #879860;color: white; padding: 18px 5px 0 5px; height:100%;min-height:100%;">
+                        <a class="logo-link" href="/" >
+                            <img class="img-fluid logo" style="margin: 0 auto;" src="/static/img/logo.png" alt="CafeYoga">
+                        </a>
+                        <div>
+                            <a class="landingpage-link" href="/presentation">
+                                <h4 class="text-centered"
+                                    style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase; margin-bottom:15%;"> Qui sommes nous ? </h4>
+                            </a>
+                            <a class="landingpage-link" href="/galeriephotos">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Galerie photos </h4>
+                            </a>
+                            <a class="landingpage-link" href="/contact">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Contact </h4>
+                            </a>
+                            <a class="landingpage-link" href="/monespace">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Mon Espace </h4>
+                            </a>
+                        </div>
+                        <h4 class="text-centered text-upper" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:10px;"> Mentions légales </h4>
+                    </div>
+                    <div layout="column" flex="35" flex-offset="0" layout-align="space-between start" style="height:48%;min-height:100%;">
+                        <div class="landingpage-item" >
+                            <a class="portfolio-link" data-toggle="modal" href="/yoga/calendrier">
+                                <div class="portfolio-hover"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_yoga.jpg" alt="Yoga">
+                                <div class="portfolio-centered">Yoga</div>
+                            </a>
+                        </div>
+                        <div class="landingpage-item" >
+                            <a class="portfolio-link" data-toggle="modal" href="">
+                                <div class="portfolio-hover"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_evenements.jpg" alt="Evenements">
+                                <div class="portfolio-centered">evenements</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Landscape on mobile, tablets -->
+            <div ng-if="!portrait" hide-xs hide-sm hide-gt-md class="fullsize-container" layout="column">
+                <div layout="row" layout-align="space-around center"  style="height:100%;">
+                    <div layout="column" flex="40" layout-align="space-between end" style="min-height:100%;">
+                        <div class="landingpage-item-landscape">
+                            <a class="portfolio-link" data-toggle="modal" href="/restaurant/nosproduits">
+                                <div class="portfolio-perm" ></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_restaurant.jpg" alt="Restaurant">
+                                <div class="portfolio-centered-perm">Restaurant</div>
+                            </a>
+                        </div>
+                        <div class="landingpage-item-landscape">
+                            <a class="portfolio-link" data-toggle="modal" href="/boutique/createurs">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_boutique.jpg" alt="Exposition">
+                                <div class="portfolio-centered-perm">Boutique & Expositions</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="column" flex="15" flex-offset="0" layout-align="space-between center"
+                         style="font-family:Tillana;background-color: #879860;color: white; padding: 18px 5px 0 5px; height:100%;min-height:100%;">
+                        <a class="logo-link" href="/" >
+                            <img class="img-fluid logo" style="margin: 0 auto;" src="/static/img/logo.png" alt="CafeYoga">
+                        </a>
+                        <div>
+                            <a class="landingpage-link" href="/presentation">
+                                <h4 class="text-centered"
+                                    style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase; margin-bottom:15%;"> Qui sommes nous ? </h4>
+                            </a>
+                            <a class="landingpage-link" href="/galeriephotos">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Galerie photos </h4>
+                            </a>
+                            <a class="landingpage-link" href="/contact">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Contact </h4>
+                            </a>
+                            <a class="landingpage-link" href="/monespace">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Mon Espace </h4>
+                            </a>
+                        </div>
+                        <h4 class="text-centered text-upper" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:10px;"> Mentions légales </h4>
+                    </div>
+                    <div layout="column" flex="40" flex-offset="0" layout-align="space-between start" style="height:48%;min-height:100%;">
+                        <div class="landingpage-item-landscape" >
+                            <a class="portfolio-link" data-toggle="modal" href="/yoga/calendrier">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_yoga.jpg" alt="Yoga">
+                                <div class="portfolio-centered-perm">Yoga</div>
+                            </a>
+                        </div>
+                        <div class="landingpage-item-landscape" >
+                            <a class="portfolio-link" data-toggle="modal" href="">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/photo_evenements.jpg" alt="Evenements">
+                                <div class="portfolio-centered-perm">evenements</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="portrait" hide-xs hide-sm hide-gt-md class="fullsize-container" layout="column">
+                <div layout="column" flex  style="min-height:100%;">
+                    <div layout="row"  layout-align="center center" class="landingpage-first-line"></div>
+
+                    <div layout="row" layout-align="space-between start" class="landingpage-row-md">
+                        <div class="landingpage-item-md">
+                            <a class="portfolio-link" data-toggle="modal" href="/restaurant/nosproduits">
+                                <div class="portfolio-perm" ></div>
+                                <img class="img-fluid" style="max-width:95%; "  src="/static/img/restaurant_300_125.jpg" alt="Restaurant">
+                                <div class="portfolio-centered-perm">Restaurant</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="row"  layout-align="center center" style="min-height:1%;"></div>
+                    <div layout="row" layout-align="space-between start" class="landingpage-row-md">
+                        <div class="landingpage-item-md">
+                            <a class="portfolio-link" data-toggle="modal" href="/yoga/calendrier">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/yoga_300_125.jpg" alt="Yoga">
+                                <div class="portfolio-centered-perm">Yoga</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="row"  layout-align="center center" style="min-height:1%;"></div>
+                    <div layout="row"  layout-align="center center"
+                         style="font-family:Tillana;background-color: #879860;color: white; margin: 0 auto; padding: 18px 5px 0 5px; width:95%;min-height:15%;">
+                        <div>
+                            <a class="landingpage-link" href="/presentation">
+                                <h4 class="text-centered"
+                                    style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase; margin-bottom:15%;"> Qui sommes nous ? </h4>
+                            </a>
+                            <a class="landingpage-link" href="/galeriephotos">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Galerie photos </h4>
+                            </a>
+                            <a class="landingpage-link" href="/contact">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Contact </h4>
+                            </a>
+                            <a class="landingpage-link" href="/monespace">
+                                <h4 class="text-centered" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:15%;"> Mon Espace </h4>
+                            </a>
+                        </div>
+                        <a class="logo-link" href="/" >
+                            <img class="img-fluid logo" style="margin: 0 25%;width:50%;height:50%;" src="/static/img/logo.png" alt="CafeYoga">
+                        </a>
+                        <h4 class="text-centered text-upper" style="padding: 2% 0;color:white;font-size:16px;text-transform: uppercase;margin-bottom:10px;"> Mentions légales </h4>
+                    </div>
+                    <div layout="row"  layout-align="center center" style="min-height:1%;"></div>
+                    <div layout="row" layout-align="space-between start" class="landingpage-row-md" >
+                        <div class="landingpage-item-md" >
+                            <a class="portfolio-link" data-toggle="modal" href="/boutique/createurs">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/boutique_300_125.jpg" alt="Boutique">
+                                <div class="portfolio-centered-perm">Boutique & Expositions</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="row"  layout-align="center center" style="min-height:1%;"></div>
+                    <div layout="row" layout-align="space-between start" class="landingpage-row-md" >
+                        <div class="landingpage-item-md">
+                            <a class="portfolio-link" data-toggle="modal" href="/boutique/createurs">
+                                <div class="portfolio-perm"></div>
+                                <img class="img-fluid" style="max-width:95%;"  src="/static/img/evenements_300_125.jpg" alt="Evenements">
+                                <div class="portfolio-centered-perm">evenements</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div layout="row"  layout-align="center center" style="min-height:1%;"></div>
+                </div>
+            </div>
+
+
+            <div hide-gt-sm class="fullsize-container" style="height:100%;" layout="column" layout="space-between center">
+                <div layout="column" layout="space-between stretch" style="height:100%;" >
+                    <div layout="row" layout-align="start center" layout-align-xs="center center">
+                        <a hide-xs class="logo-link"  href="/" >
+                            <img class="img-fluid logo logo-sm" style="margin: 15px 15px; display: block;width: auto;height: auto;" src="/static/img/logo.png" alt="CafeYoga">
+                        </a>
+                        <a hide-gt-xs class="logo-link"  href="/" >
+                            <img class="img-fluid logo logo-sm" style="margin: 15px 0; display: block;width: auto;height: auto;" src="/static/img/logo.png" alt="CafeYoga">
+                        </a>
+                        <h1 hide-xs style="font-family: Arquitectura; margin-left: 30%;">Café Aum</h1>
                     </div>
 
+                    <md-content style="margin-right:0px;background-color:#fffdfa;">
+                        <md-list>
+                            <div class="landingpage-list-item" ng-repeat="item in items">
+                                <a class="landingpage-item" href="{{item.link}}" style="margin: auto 0;">
+                                    <md-list-item class="md-3-line">
 
+                                        <img ng-src="{{item.img}}?{{$index}}" class="md-avatar" alt="{{item.who}}">
+                                        <div style="margin: auto 0;">
+                                            <div class="md-list-item-text">
+                                                <h3 style="margin: auto;" hide-xs>{{item.text}}</h3>
+                                                <h3 style="margin: auto;" hide-gt-xs>{{item.text_xs}}</h3>
+                                                <p hide-xs>{{item.notes}}</p>
+                                            </div>
+                                        </div>
+                                        <md-divider style="width:75%;" md-inset ng-if="!$last"></md-divider>
+                                    </md-list-item>
+                                </a>
+                            </div>
+
+                        </md-list>
+                    </md-content>
+                    <div hide-gt-sm ng-include="'/static/templates/general/footer.html'"></div>
                 </div>
-                <div class="col-md-4 col-sm-6 portfolio-item bottom right">
-                    <a class="portfolio-link" data-toggle="modal" href="">
-                        <div class="portfolio-hover"></div>
-                        <img class="img-fluid" src="/static/img/exposition-carre.jpeg" alt="Exposition">
-                        <div class="portfolio-centered">Expositions</div>
-                    </a>
-                </div>
-           </div>
+            </div>
         </div>
     </div>
 </div>
+
+

@@ -3,6 +3,16 @@ from django.db import models
 from authentication.models import Account
 
 
+class UploadedImage(models.Model):
+    image = models.ImageField('Updloaded image')
+    nom = models.CharField(max_length=32)
+
+    def __unicode__(self):
+        return ' '.join(self.nom)
+
+    def __str__(self):
+        return ' '.join(self.nom)
+
 class Professeur(models.Model):
     class Meta:
         ordering = ('nom', 'prenom',)
@@ -80,6 +90,7 @@ class Reservation(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     nb_personnes = models.IntegerField(default=1)
     checked_present = models.BooleanField(default=False)
+    nb_present = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, db_index=True)
     confirmed = models.BooleanField(default=False)
@@ -91,3 +102,55 @@ class Reservation(models.Model):
 
     def __str__(self):
         return ' >  < '.join(["Cours du " +str(self.lesson), "Réservé par : "+ str(self.account.first_name) + " "+ str(self.account.last_name), "pour " + str(self.nb_personnes), str("Present" if self.checked_present else "Non Present")])
+
+
+###############################
+# Transaction related Objects #
+###############################
+class Formule(models.Model):
+
+    montant = models.FloatField(default=0.0)
+    nb_cours = models.IntegerField(default=0)
+    description = models.CharField(max_length=64)
+
+    def __unicode__(self):
+        return ' '.join(["Formule ", str(self.nb_cours), "cours --", str(self.montant) + " €"])
+
+    def __str__(self):
+        return ' '.join(["Formule ", str(self.nb_cours), "cours --", str(self.montant) + " €"])
+
+
+class CodeReduction(models.Model):
+    code = models.CharField(max_length=10)
+    pourcentage = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return ' '.join(["Code :", str(self.code), "- Réduction : ", str(self.pourcentage) + " %"])
+
+    def __str__(self):
+        return ' '.join(["Code :", str(self.code), "- Réduction : ", str(self.pourcentage) + " %"])
+
+
+
+class TransactionManager(models.Manager):
+
+    def create_transaction(self, account, montant, token):
+        transaction = Transaction(account=account, montant=montant, token=token)
+        transaction.save(force_insert=True)
+        return transaction
+
+
+class Transaction(models.Model):
+
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    montant = models.FloatField(default=0.0)
+    token = models.CharField(max_length=64)
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = TransactionManager()
+
+    def __unicode__(self):
+        return ' '.join([str(self.account), str(self.montant) + " €", self.token])
+
+    def __str__(self):
+        return ' '.join([str(self.account), str(self.montant) + " €", self.token])

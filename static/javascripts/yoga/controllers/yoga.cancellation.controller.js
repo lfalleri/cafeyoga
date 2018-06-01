@@ -27,12 +27,10 @@
                YogaService.stagedReservationExit(false, undefined, false);
             }else{
                var pendingCancellation = YogaService.getPendingCancellationByAccount($scope.account.id);
-
                if(pendingCancellation == undefined){
                   YogaService.stagedCancellationExit(true, $scope.account.id, false);
                   return;
                }
-
                var start = new Date(pendingCancellation.lesson.date);
                $scope.lesson = pendingCancellation.lesson;
                $scope.reservation = pendingCancellation;
@@ -73,10 +71,6 @@
         }
      }
 
-     $scope.gotoCalendar = function(){
-        YogaService.gotoCalendar();
-     }
-
-
+     $scope.gotoCalendar = function(){YogaService.gotoCalendar();}
   }
 })();

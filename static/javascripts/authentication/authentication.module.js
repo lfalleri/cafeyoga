@@ -4,7 +4,8 @@
   angular
     .module('cafeyoga.authentication', [
       'cafeyoga.authentication.controllers',
-      'cafeyoga.authentication.services'
+      'cafeyoga.authentication.services',
+      'vcRecaptcha'
     ]);
 
   angular

@@ -45,10 +45,11 @@ class LoginView(views.APIView):
 
         account = authenticate(email=email, password=password)
 
+
         if account is not None:
             if account.is_active:
                 login(request, account)
-
+                print("Account est authentifie")
                 serialized = AccountSerializer(account)
 
                 return Response(serialized.data)
@@ -69,7 +70,7 @@ class LogoutView(views.APIView):
 
     def post(self, request, format=None):
         logout(request)
-
+        print("Account n'est plus authentifie")
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -93,13 +94,9 @@ class FullAccountView(views.APIView):
 class AccountView(views.APIView):
 
     def post(self, request, format=None):
+        print("AccountView-> post %s" % request.body)
         data = json.loads(request.body)
         account_id = data['account_id']
-        first_name = data['first_name']
-        last_name = data['last_name']
-        email = data['email']
-        password = data['password']
-
         account = Account.objects.get(id=account_id)
         if not account:
             return Response({
@@ -107,11 +104,29 @@ class AccountView(views.APIView):
                 'message': 'This account has not been found.'
             }, status=status.HTTP_404_NOT_FOUND)
 
+        if "credit" in data:
+            # Just recrediting account
+            credit = int(data['credit'])
+            account.credits += credit
+            account.save()
+            return Response(status.HTTP_200_OK)
+
+        logout(request)
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email = data['email']
+        password = data['password']
+
         account.first_name = first_name
         account.last_name = last_name
         account.email = AccountManager.normalize_email(email)
         account.set_password(password)
         account.save()
+        authentification = authenticate(email=email, password=password)
+        if authentification is not None:
+            if authentification.is_active:
+                login(request, authentification)
+
         return Response(status.HTTP_200_OK)
 
     def get(self, request, format=None):

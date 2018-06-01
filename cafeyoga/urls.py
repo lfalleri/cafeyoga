@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 
 from rest_framework_nested import routers
 
@@ -15,7 +17,11 @@ from yoga.views import CalendarView, \
                        LessonView, \
                        ReservationView,\
                        PendingReservationView,\
-                       ProfesseursView
+                       ProfesseursView,\
+                       TransactionView,\
+                       FormuleView,\
+                       CodeReductionView
+
 
 from cafeyoga.views import IndexView,\
                            LandingPageView
@@ -23,18 +29,17 @@ from cafeyoga.views import IndexView,\
 from restaurant.views import CarteView, \
                              RestaurantConfigView,\
                              RestaurantReservationView
-#from authentication import urls as authentication_urls
 
+from boutique.views import CreateurView, \
+                            ExpositionView
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
-#router.register(r'yoga', ReservationViewSet)
-#router.register(r'calendar', CalendarView)
 
 accounts_router = routers.NestedSimpleRouter(
     router, r'accounts', lookup='account'
 )
-#accounts_router.register(r'posts', AccountReservationViewSet)
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -54,11 +59,18 @@ urlpatterns = patterns(
     url(r'^api/v1/yoga/reservation/$', ReservationView.as_view(), name='yoga_reservation'),
     url(r'^api/v1/yoga/pendingreservation/$', PendingReservationView.as_view(), name='yoga_pending_reservation'),
     url(r'^api/v1/yoga/animators/$', ProfesseursView.as_view(), name='yoga_animators'),
+    url(r'^api/v1/yoga/formule/$', FormuleView.as_view(), name='formule'),
+    url(r'^api/v1/yoga/transaction/$', TransactionView.as_view(), name='transaction'),
+    url(r'^api/v1/yoga/code-reduction/$', CodeReductionView.as_view(), name='code-reduction'),
 
     # Restaurant Views
     url(r'^api/v1/restaurant/menu/$', CarteView.as_view(), name='carte'),
     url(r'^api/v1/restaurant/config/$', RestaurantConfigView.as_view(), name='carte'),
     url(r'^api/v1/restaurant/reservation/$', RestaurantReservationView.as_view(), name='reservation'),
+
+    # Boutique Views
+    url(r'^api/v1/boutique/createurs/$', CreateurView.as_view(), name='createurs'),
+    url(r'^api/v1/boutique/expos/$', ExpositionView.as_view(), name='expos'),
 
     # Admin Views
     url(r'^admin/', include(admin.site.urls)),
@@ -67,4 +79,4 @@ urlpatterns = patterns(
 
     # Index Views
     url('^.*$', IndexView.as_view(), name='index'),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

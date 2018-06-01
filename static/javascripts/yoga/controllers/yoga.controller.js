@@ -20,18 +20,37 @@
           Intensif:'#d62506',
           Expert:'#1e1919'
      };
+     /*var TYPE_COLOR = {
+          Hatha:["#17822e", "#4aa55e"],
+          Ashtanga:['#a07828','#c19e57'] ,
+          Vinyasa:['#8028a0','#a051bc'],
+          Bikram:['#1f5f7a','#488aa5'],
+     };*/
      var TYPE_COLOR = {
           Hatha:["#17822e", "#4aa55e"],
           Ashtanga:['#a07828','#c19e57'] ,
           Vinyasa:['#8028a0','#a051bc'],
           Bikram:['#1f5f7a','#488aa5'],
      };
-     var EVENT_COLOR = {
+     /*var EVENT_COLOR = {
           Hatha:{reservable : "#17822e", focused :"#4aa55e", complete:"#9a9ca0", reserved:"#14b714"},
           Ashtanga:{reservable :'#a07828',focused :'#c19e57', complete:"#9a9ca0", reserved:"#14b714"},
           Vinyasa:{reservable :'#8028a0',focused :'#a051bc', complete:"#9a9ca0", reserved:"#14b714"},
           Bikram:{reservable :'#1f5f7a',focused :'#488aa5', complete:"#9a9ca0", reserved:"#14b714"},
+     };*/
+     var EVENT_COLOR = {
+          Hatha:{reservable : "#bfcb91", focused :"#fffdfa", complete:"#f8e4c8", reserved:"#54622e"},
+          Ashtanga:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
+          Vinyasa:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
+          Bikram:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
      };
+     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+     Date.prototype.addDays = function(days) {
+         var date = new Date(this.valueOf());
+         date.setDate(date.getDate() + days);
+         return date;
+      }
 
      var vm = this;
      activate();
@@ -53,24 +72,33 @@
              selectedAccount:undefined,
           }
      };
+     $scope.datepicker = { display: true,
+                           display_buttons : false,
+                           today : new Date(),
+                           min_date : new Date(),
+                           max_date : new Date().addDays(30),
+                           selectedLesson : undefined,
+                          };
+     $scope.days_with_lessons = {};
 
-     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
 
      function activate() {
          Authentication.getFullAccount(function(value){
             $scope.account = value;
             if(angular.equals($scope.account,{})){
+               /* If not logged in, just get all the lessons */
                getAllLessons();
             }else{
                /* If there is an on-going (pending) reservation, don't display calendar page, but reservation page */
                YogaService.gotoReservationIfAny($scope.account);
 
+               /* Otherwise get reservations of  user */
                YogaService.getReservationsByAccount($scope.account.id, function(success, reservations){
                if(!success){
                   return;
                }
-               console.log("YogaController : reservation pour ", $scope.account, " : ", reservations);
-               reservations.forEach( function(reservation){
+               reservations.forEach(function(reservation){
                    if (!$scope.reservedLessonIdForAccount.includes(reservation.lesson.id)){
                       $scope.reservedLessonIdForAccount.push(reservation.lesson.id);
                    }
@@ -93,6 +121,7 @@
            var diff_min = Number.MAX_SAFE_INTEGER;
            lessons = value.data;
            lessons.forEach(function (lesson) {
+               console.log("Lesson : ",lesson);
                lesson.reservedByAccount = false;
                lesson.cancelable = false;
                lesson.reservable = true;
@@ -109,10 +138,9 @@
 
                /* Check if lesson is in the past */
                if( (new_event.start - now) <0){
-                  new_event.borderColor = "#9a9ca0";
-                  new_event.backgroundColor = "#9a9ca0";
-                  new_event.title = lesson.type + ' ' + lesson.intensity + '\n' +
-                                    lesson.animator.prenom + ' ' + lesson.animator.nom;
+                  new_event.borderColor =  "#7a552e"/*"#9a9ca0";*/
+                  new_event.backgroundColor = "#f8e4c8";
+                  new_event.title = lesson.type+' '+lesson.intensity;/*+'\n'+lesson.animator.prenom+' '+lesson.animator.nom;*/
                   lesson.display_title = "Cours sélectionné (Terminé):";
                   lesson.reservable = false;
                   lesson.cancelable = false;
@@ -122,10 +150,11 @@
                      /* Lesson reserved by user */
                      lesson.display_title = "Cours sélectionné (Réservé):";
 
-                     new_event.borderColor = INTENSITY_COLOR[lesson.intensity];
+                     new_event.borderColor = "#7a552e";
                      new_event.backgroundColor = EVENT_COLOR[lesson.type].reserved;
-                     new_event.title = lesson.type + ' ' + lesson.intensity + ' (Réservé)\n' +
-                                       lesson.animator.prenom + ' ' +lesson.animator.nom;
+                     new_event.textColor = "#ffffff";
+                     new_event.title = lesson.type + ' ' + lesson.intensity + ' (Réservé)\n' ;/*+
+                                       lesson.animator.prenom + ' ' +lesson.animator.nom;*/
 
                      var reservedLesson = {};
                      reservedLesson.description = lesson.type+' '+lesson.intensity+' - '+
@@ -145,21 +174,27 @@
                      }
                   }else{
                      /* Lesson not reserved by user; it's either Reservable or Complete */
-                     new_event.title = lesson.type + ' ' + lesson.intensity + '\n'
-                                     + lesson.animator.prenom +' ' + lesson.animator.nom;
+                     new_event.title = lesson.type+' '+lesson.intensity+'\n';/*+lesson.animator.prenom+' '+lesson.animator.nom;*/
                      if(lesson.nb_places > 0){
                         lesson.display_title = "Cours sélectionné (Réservable):";
-                        new_event.borderColor = INTENSITY_COLOR[lesson.intensity];
+                        new_event.borderColor = "#3e4826";
                         new_event.backgroundColor = EVENT_COLOR[lesson.type].reservable;
+                        new_event.textColor = "#3e4826";
                         lesson.reservable = true;
                         if ((new_event.start - now) < diff_min){
                            diff_min = new_event.start - now;
                            closest_lesson = new_event;
+                           console.log("closest_lesson : ",lesson);
+                           new_event.borderColor = "#3e4826";
+                           new_event.backgroundColor = "#fffdfa";
+                           new_event.textColor = "#3e4826";
+                           $scope.previous_event = new_event;
+                           $scope.previous_selected_background_color = EVENT_COLOR[lesson.type].reservable;
                         }
                      }else{
                         lesson.display_title = "Cours sélectionné (Complet):";
-                        new_event.borderColor = "#9a9ca0";
-                        new_event.backgroundColor = "#9a9ca0";
+                        new_event.borderColor = "#7a552e";
+                        new_event.backgroundColor = "#f8e4c8";
                         lesson.reservable = false;
                      }
                   }
@@ -169,16 +204,27 @@
 
                /* Event information not directly connected with calendar events  : used for display */
                new_event.meta = {};
-               new_event.meta.panel_description = lesson.type + ' ' + lesson.intensity + ' - ' +
+               new_event.meta.panel_description = lesson.type + ' ' + lesson.intensity + ' \n ' +
                                                   lesson.animator.prenom +' ' + lesson.animator.nom;
                new_event.meta.day = new_event.start.toLocaleDateString('fr-FR', options);
                new_event.meta.start = new_event.start.getHours() + ":"+
-                       (new_event.start.getMinutes() < 10 ? '0' : '') +  new_event.start.getMinutes();
+                                     (new_event.start.getMinutes() < 10 ? '0' : '') +
+                                      new_event.start.getMinutes();
                new_event.meta.duration = lesson.duration;
                new_event.meta.nb_places = lesson.nb_places;
                new_event.meta.lesson = lesson;
 
+               /* Add newly built event to calendar events list */
                $scope.events.push(new_event);
+
+               /* For datepicker only */
+               var day = new_event.meta.day;
+               if( lesson.cancelable || lesson.reservable){
+                  if (!(day in $scope.days_with_lessons)){
+                     $scope.days_with_lessons[day] = [];
+                  }
+                  $scope.days_with_lessons[day].push(Object.assign({}, new_event.meta));
+               }
             });
 
            if(closest_lesson){
@@ -189,6 +235,7 @@
                $scope.duration = closest_lesson.meta.duration;
                $scope.lesson = closest_lesson.meta.lesson;
                $scope.nb_places = closest_lesson.meta.nb_places;
+               $scope.lesson_to_display = true;
 
                if(closest_lesson.meta.lesson.reservedByAccount){
                   $scope.lesson.display_title = "Prochain Cours (Réservé):";
@@ -200,12 +247,12 @@
                   }
                }
 
-               $scope.lesson_to_display = true;
-
+               $scope.datepicker.lessons_of_today = $scope.days_with_lessons[$scope.day];
+               console.log("Lesson of TODAY : ",$scope.datepicker.lessons_of_today);
                if($scope.account.is_staff){
+                   /* Specific is user is in staff, get all the reservations for the closest lesson */
                    $scope.staff.reservationsForLesson = [];
                    YogaService.getReservationsByLesson($scope.lesson, function(success, reservations){
-                       console.log("reservations for lesson : ", reservations);
                        if(!success)return;
                        reservations.forEach(function(reservation){
                            $scope.staff.reservationsForLesson.push(reservation);
@@ -225,12 +272,12 @@
 
      /* Calendar config object */
      $scope.uiConfig = {
-          calendar:{
+         calendar:{
             timezone:'Europe/Paris',
             allDaySlot: false,
             defaultView: 'agendaWeek',
             height: 500,
-            contentHeight: 575,
+            contentHeight: 530,
             firstDay: 1,
             handleWindowResize:true,
             views: {
@@ -256,18 +303,24 @@
             },
             columnFormat: 'ddd D MMM',
             titleRangeSeparator: ' au ',
-            hiddenDays: [  0, 1 ],
-            aspectRatio: 3,
-            height: 560,
+            hiddenDays: [  1, 2 ],
+            aspectRatio: 1,
+            height: 400,
             header:{
               left: ' ',
               center: 'title',
               right: 'prev,next'
             },
+            eventAfterRender :  function (event, element, view) {
+                if(event.meta.lesson.id == $scope.previous_event.meta.lesson.id){
+                    element.css('border-width','medium');
+                    $scope.previous_selected = element;
+                }
+            },
             eventClick: function(calEvent, jsEvent, view) {
                    /* Lesson clicked :
                        - display its information (1)
-                       - if is staff member : display user registered for this lesson (2)
+                       - if is staff member : display users registered for this lesson (2)
                        - restore background color and border for previously selected lesson (3)
                        - change background color and border of current lesson (4) */
 
@@ -280,7 +333,7 @@
                    $scope.nb_places = calEvent.meta.nb_places;
                    $scope.alert_message = undefined;
                    $scope.reservationParams.nb_persons = 1;
-
+                   $scope.reservationParams.s = undefined;
                    /* (2) */
                    if($scope.account.is_staff){
                        $scope.staff.reservationsForLesson = [];
@@ -288,7 +341,14 @@
                        console.log("reservations for lesson : ", reservations);
                            if(!success)return;
                            reservations.forEach(function(reservation){
+                               console.log("reservation : ",reservation);
                                $scope.staff.reservationsForLesson.push(reservation);
+                              /* for(var i=0; i<reservation.nb_personnes; i++){
+                                   var new_reservation = Object.assign({}, reservation);
+                                   new_reservation.nb_personnes = 1;
+                                   $scope.staff.reservationsForLesson.push(new_reservation);
+                                   console.log("pushing new_reservation : ",new_reservation);
+                               }*/
                            });
                        });
                    }
@@ -300,36 +360,71 @@
                          $scope.previous_selected.css('backgroundColor', EVENT_COLOR[$scope.previous_event.meta.lesson.type].reserved);
                       }
                       else{
-                         $scope.previous_selected.css('backgroundColor', EVENT_COLOR[$scope.previous_event.meta.lesson.type].reservable);
+                         if(!$scope.previous_event.meta.lesson.reservable &&
+                            !$scope.previous_event.meta.lesson.cancelable ){
+                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].complete);
+                         }else{
+                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR[$scope.previous_event.meta.lesson.type].reservable);
+                         }
                       }
                       $scope.previous_selected.css('border-color',$scope.previous_selected_border_color);
                       $scope.previous_selected.css('border-width','thin');
                    }
-                   if(!calEvent.meta.lesson.reservable &&
+                  /*if(!calEvent.meta.lesson.reservable &&
                       !calEvent.meta.lesson.cancelable){
                       $scope.previous_selected = undefined;
                       return;
+                   }*/
+                   if(!calEvent.meta.lesson.reservable &&
+                      !calEvent.meta.lesson.cancelable){
+                      $scope.previous_selected = $(this);
+                      $scope.previous_event = calEvent;
+                      $scope.previous_selected_border_color = $(this).css('border-color');
+                      $(this).css('border-color', '#3e4826');
+                      $(this).css('color', '#3e4826');
+                      $(this).css('backgroundColor', '#fffdfa');
+                      $(this).css('border-width','medium');
+                      return;
                    }
                    if(calEvent.meta.lesson.reservedByAccount){
+                      console.log("Réservé");
                       $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].reserved;
                       $(this).css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].reserved);
                    }else{
-                      $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].reservable;
+                      if(!$scope.previous_event.meta.lesson.reservable &&
+                         !$scope.previous_event.meta.lesson.cancelable ){
+                         console.log("Complet");
+                         $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].complete;
+                      }
+                      else{
+                         console.log("Réservable");
+                         $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].reservable;
+                      }
                       $(this).css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].focused);
                    }
-
+                   console.log("Set Border");
                    /* (4) */
                    $scope.previous_selected = $(this);
                    $scope.previous_event = calEvent;
                    $scope.previous_selected_border_color = $(this).css('border-color');
-                   $(this).css('border-color', '#a02019');
+                   $(this).css('border-color', '#3e4826');
+                   $(this).css('color', '#3e4826');
                    $(this).css('border-width','medium');
             },
             eventMouseover: function(calEvent, jsEvent, view) {
                    $(this).css('cursor','pointer');
             },
-          }
+         }
      };
+
+     $scope.updateReservationParams = function(){
+         if( $scope.reservationParams.nb_persons > 1 ){
+            $scope.reservationParams.s = 's';
+         }else{
+            $scope.reservationParams.s = '';
+         }
+         console.log("S : ",$scope.reservationParams.s );
+     }
 
      /* Function called when the reservation button is clicked by user */
      $scope.createReservation = function(lesson, account, reservationParams){
@@ -339,8 +434,7 @@
              $scope.alert_message_color = "orange";
              return;
          }
-         if( account.credits < (lesson.price * reservationParams.nb_persons) )
-         {
+         if( account.credits < (lesson.price * reservationParams.nb_persons)){
              $scope.alert_message = ["Vous n'avez pas assez de crédits pour réserver ce cours"];
              $scope.alert_message_color = "red";
          }
@@ -361,27 +455,33 @@
               Store reservation parameters in YogaService and
               change location to the reservation confirmation page (managed by YogaReservationController)
               */
-             YogaService.stageReservation(lesson, account,reservationParams.nb_persons, function(success, message, updated_lesson){
-                if(!success){
-                    if(updated_lesson != undefined){
-                       $scope.lesson.nb_places = updated_lesson.nb_places;
-                    }
-                    $scope.alert_message = message;
-                    $scope.alert_message_color = "red";
-                    return;
+             YogaService.stageReservation(
+                lesson,
+                account,
+                reservationParams.nb_persons,
+                function(success, message, updated_lesson){
+                   if(!success){
+                      if(updated_lesson != undefined){
+                         $scope.lesson.nb_places = updated_lesson.nb_places;
+                      }
+                      $scope.alert_message = message;
+                      $scope.alert_message_color = "red";
+                      return;
+                   }
                 }
-             });
+             );
          }
      }
 
      /* Function called when the recredite button is clicked by user */
      $scope.recrediteAccount = function(account){
-        console.log("recredite ");
+
         $location.url('/yoga/recharge');
      }
 
-     /* Function called when the cancellation button is clicked by user */
-     $scope.cancelReservation = function(lesson, account, live){
+     /* Function called when the cancellation button is clicked by user.
+        by_staff means the staff is responsible of "live" cancellation */
+     $scope.cancelReservation = function(lesson, account, by_staff){
         $scope.alert_message = [];
 
         YogaService.getReservation(lesson, account, function(success, reservation){
@@ -397,11 +497,11 @@
            }
            reservation = reservation[0];
 
-           if(!live){
+           if(!by_staff){
               /* Delegate actual to YogaCancellationController on cancellation page */
               YogaService.stageCancellation(reservation, "calendar");
            }else{
-
+               /* A staff member wants to cancel reservation */
                YogaService.cancelReservation(lesson, account, function(success, message){
                    if(!success){
                        $scope.alert_message = message;
@@ -412,15 +512,13 @@
                    /* Update local information */
                    $scope.account.credits += lesson.price * reservation.nb_personnes;
                    $scope.lesson.nb_places += reservation.nb_personnes;
-
-                   if(live){
-                       $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
-                           return el.account.id !== reservation.account.id;
-                       });
-                       if($scope.staff.addUser.selectedAccount.id == reservation.account.id){
-                           $scope.staff.addUser.selectedAccount.credits += (reservation.nb_personnes * reservation.lesson.price);
-                       }
+                   $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
+                       return el.account.id !== reservation.account.id;
+                   });
+                   if($scope.staff.addUser.selectedAccount.id == reservation.account.id){
+                       $scope.staff.addUser.selectedAccount.credits += (reservation.nb_personnes * reservation.lesson.price);
                    }
+
                    $scope.reservedLessons = $scope.reservedLessons.filter(function(el) {return el.id !== lesson.id;});
                    $scope.$apply();
                }); /* cancelReservation() */
@@ -428,19 +526,46 @@
         }
      )};
 
-
      /* function called when a staff member check someone present */
      $scope.checkedPresent = function(reservation){
-        console.log(reservation.account.email + " is present at lesson : "+ reservation.lesson.id);
-        console.log("reservation : "+ reservation);
-        YogaService
-           .checkAccountPresent(
-               reservation.lesson,
-               reservation.account,
-               reservation.checked_present,
-                  function(success, message){
-                    if(success) console.log("Checked");
-                  });
+        YogaService.checkAccountPresent(reservation.lesson,
+                                        reservation.account,
+                                        reservation.checked_present,
+                                        function(success, message){});
+     }
+
+     $scope.incrementNbPresent = function(reservation){
+        reservation.nb_present++;
+        YogaService.updateNbPresent(reservation.lesson,
+                                    reservation.account,
+                                    reservation.nb_present,
+                                    function(success, message){});
+        if(reservation.nb_present >= reservation.nb_personnes){
+            reservation.checked_present = true;
+            reservation.disableAddFriend = true;
+            YogaService.checkAccountPresent(reservation.lesson,
+                                            reservation.account,
+                                            reservation.checked_present,
+                                            function(success, message){});
+
+        }
+     }
+
+     $scope.decrementNbPresent = function(reservation){
+        reservation.nb_present--;
+        YogaService.updateNbPresent(reservation.lesson,
+                                    reservation.account,
+                                    reservation.nb_present,
+                                    function(success, message){});
+        if(reservation.nb_present <= reservation.nb_personnes){
+            reservation.checked_present = false;
+            reservation.disableAddFriend = false;
+            YogaService.checkAccountPresent(reservation.lesson,
+                                            reservation.account,
+                                            reservation.checked_present,
+                                            function(success, message){});
+
+        }
      }
 
      $scope.displaySearchForm = function(){
@@ -454,18 +579,9 @@
      }
 
      $scope.searchUser = function(){
-        console.log("$scope.searchUser : nom=",   $scope.staff.addUser.last_name,
-                                       " prenom=",$scope.staff.addUser.first_name,
-                                       " email=", $scope.staff.addUser.email);
-        if($scope.staff.addUser.last_name==undefined){
-           $scope.staff.addUser.last_name = "";
-        }
-        if($scope.staff.addUser.first_name==undefined){
-           $scope.staff.addUser.first_name = "";
-        }
-        if($scope.staff.addUser.email==undefined){
-           $scope.staff.addUser.email = "";
-        }
+        if($scope.staff.addUser.last_name==undefined){$scope.staff.addUser.last_name = "";}
+        if($scope.staff.addUser.first_name==undefined){$scope.staff.addUser.first_name = "";}
+        if($scope.staff.addUser.email==undefined){$scope.staff.addUser.email = "";}
 
         Authentication.getUsers(
             $scope.staff.addUser.last_name,
@@ -483,7 +599,6 @@
                 $scope.staff.addUser.displaySearchUserForm = false;
                 $scope.staff.addUser.displaySearchedAccounts = true;
                 $scope.staff.addUser.displayDetailedAccount = false;
-                console.log("$scope.staff.addUser.searchedAccounts : ", $scope.staff.addUser.searchedAccounts);
             });
      }
 
@@ -494,14 +609,14 @@
      }
 
      $scope.staff.addUser.selectSearchedAccount = function(account){
-        console.log("selectSearchedAccount : ", account);
-
         $scope.staff.addUser.displaySearchUserForm = false;
         $scope.staff.addUser.displaySearchedAccounts = false;
         $scope.staff.addUser.displayDetailedAccount = true;
+        $scope.staff.addUser.proceedBalanceError = undefined;
         $scope.staff.addUser.selectedAccount = account;
         $scope.staff.addUser.proceed_credit = 0;
         $scope.staff.addUser.proceed_debit = 0;
+        $scope.staff.addUser.nb_persons = 0;
      }
 
      $scope.updateNbPersons = function(){
@@ -518,9 +633,26 @@
      }
 
      $scope.proceedBalance = function(account, credit,debit){
-        console.log("credit : ", credit, " / débit : ", debit);
+        if(credit==""){credit = 0;}
+        if(debit==""){debit = 0;}
+        $scope.staff.addUser.proceedBalanceSuccess = "";
+        $scope.staff.addUser.proceedBalanceError   = "";
         if((account.credits + credit - debit) <0){
            $scope.staff.addUser.proceedBalanceError = "Pas assez de crédits";
+           return;
+        }
+        if( (debit == 0) && (credit > 0) ){
+           Authentication.crediteProfile(account,credit, function(success, message){
+              if(!success){
+                 $scope.staff.addUser.proceedBalanceError = "Impossible de recréditer le compte";
+                return;
+              }
+              $scope.staff.addUser.proceedBalanceSuccess = "Compte recrédité de "+credit+" credits";
+              $scope.staff.addUser.selectedAccount.credits += credit - debit;
+              $scope.staff.addUser.proceed_credit = 0;
+              $scope.staff.addUser.proceed_debit = 0;
+              return;
+           });
            return;
         }
         if( debit < $scope.lesson.price ){
@@ -532,26 +664,36 @@
            return;
         }
 
+        /*var already_registered = false;
+        $scope.staff.reservationsForLesson.forEach(function(reservation){
+            if(reservation.account.id == account.id){
+               already_registered = true;
+               return;
+            }
+        });
+
+        if(already_registered){
+           $scope.staff.addUser.proceedBalanceError = "Cet élève est déjà inscrit au cours";
+           console.log("Cet élève est déjà inscrit au cours");
+           return;
+        }*/
+
         var nb_persons = debit / $scope.lesson.price;
         $scope.staff.addUser.nb_persons = nb_persons;
-
         YogaService.createLiveReservation($scope.lesson,account, nb_persons, credit, debit, function(success, message, reservation){
             if(!success){
                $scope.staff.addUser.proceedBalanceError = message;
                return;
-            }else
-            {
+            }else{
                 $scope.staff.reservationsForLesson.push(reservation);
                 $scope.staff.addUser.nb_persons = 0;
                 $scope.staff.addUser.proceedBalanceError = undefined;
                 $scope.staff.addUser.selectedAccount.credits += credit - debit;
+                $scope.staff.addUser.proceed_credit = 0;
+                $scope.staff.addUser.proceed_debit = 0;
                 $scope.lesson.nb_places -= nb_persons;
                 $scope.$apply();
             }
-
-
-
-
         });
      }
 
@@ -559,6 +701,49 @@
         $scope.staff.addUser.displaySearchUserForm = false;
         $scope.staff.addUser.displaySearchedAccounts = true;
         $scope.staff.addUser.displayDetailedAccount = false;
+        $scope.staff.addUser.proceedBalanceError = undefined;
+     }
+
+     $scope.datepicker.filterOpenedDays = function(date){
+        var day = date.toLocaleDateString('fr-FR', options);
+        if((day in $scope.days_with_lessons)) return true;
+        return false;
+     }
+
+     $scope.datepicker.change = function(){
+        var today = $scope.datepicker.today.toLocaleDateString('fr-FR', options);
+        console.log("New date selected : ", $scope.datepicker.today);
+        console.log("Lessons : ", $scope.days_with_lessons[today]);
+        $scope.datepicker.lessons_of_today = $scope.days_with_lessons[today];
+        $scope.datepicker.selectedLesson = undefined;
+     }
+
+     $scope.selectLesson = function(today_lesson){
+        console.log("Selected lesson : ", today_lesson);
+        $scope.description = today_lesson.panel_description;
+        $scope.day = today_lesson.day;
+        $scope.start = today_lesson.start;
+        $scope.duration = today_lesson.duration;
+        $scope.lesson = today_lesson.lesson;
+        $scope.nb_places = today_lesson.nb_places;
+        $scope.alert_message = undefined;
+        $scope.reservationParams.nb_persons = 1;
+        $scope.reservationParams.s = undefined;
+        $scope.datepicker.display = false;
+        $scope.datepicker.display_buttons = true;
+        $scope.datepicker.selectedLesson = today_lesson;
+     }
+
+     $scope.backToDatePicker = function(){
+        $scope.datepicker.display = true;
+        $scope.datepicker.display_buttons = false;
+        $scope.datepicker.selectedLesson = undefined;
+     }
+
+     $scope.isLessonSelected = function(lesson){
+        if($scope.datepicker.selectedLesson=== undefined) return true;
+        if($scope.datepicker.selectedLesson === lesson) return true;
+        return false;
      }
 
 

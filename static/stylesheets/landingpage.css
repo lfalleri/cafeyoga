@@ -64,21 +64,15 @@
 }
 
 .landingpage-link{
-   color: #3F3F3F;
-   padding: 15% 0 0 0;
-   font-family:"Handlee";
-   font-size: 150%;
-   /*-webkit-transition: color 0.5s, font-size 0.5s;
-   -moz-transition: color 0.5s, font-size 0.5s;
-   -o-transition: color 0.5s, font-size 0.5s;
-   transition: color 0.5s, font-size 0.5s;*/
+   font-size:15px;
+   text-transform: uppercase;
+   color: white;
    cursor: pointer;
    text-decoration: none;
 }
 
 .landingpage-link:hover{
-   color: #137b72;
-   /*font-size: 200%;*/
+   color: #5d3b0a;
    text-decoration: none;
 }
 
@@ -151,14 +145,29 @@
    margin:0 auto;
 }
 
-.portfolio-item {
-  #margin:5% 0 5% 0;
-  width: 35%;
-  height: 35%;
+@font-face {
+  font-family: 'Arquitectura';
+  src: url('resources/archtura.ttf') format('truetype');
+}
+
+.landingpage-item-md{
+   max-width:75%;
+   margin: 0 auto;
+}
+.landingpage-first-line{
+   min-height: 3.5%;
+}
+
+.landingpage-item,
+.landingpage-item-md,
+.landingpage-item-landscape,  {
+
   background-repeat: no-repeat;
   background-position: 50% 50%;
   }
-  .portfolio-item .portfolio-link {
+  .landingpage-item .portfolio-link,
+  .landingpage-item-md .portfolio-link,
+  .landingpage-item-landscape .portfolio-link{
     position: relative;
     display: block;
     max-width: 100%;
@@ -170,34 +179,51 @@
     -moz-transition: all ease 0.5s;
     transition: all ease 0.5s;}
 
-    .portfolio-item .portfolio-link:hover .portfolio-hover{
-        border-style: groove;
-        opacity: 1;
+    .landingpage-item .portfolio-link:hover .portfolio-hover{
+        opacity: 0.6;
     }
 
-    .portfolio-item .portfolio-link .portfolio-hover {
+    .landingpage-item-md .portfolio-link .portfolio-perm,
+    .landingpage-item-landscape .portfolio-link .portfolio-perm{
       position: absolute;
-      width: 100%;
-      height: 100%;
+      width: 90%;
+      height: 94%;
+      top:3%;
+      left:5%;
+      -webkit-transition: all ease 0.5s;
+      -moz-transition: all ease 0.5s;
+      transition: all ease 0.5s;
+      background:  #bfcb91;
+      opacity: 0.4;
+    }
+
+    .landingpage-item .portfolio-link .portfolio-hover {
+      position: absolute;
+      width: 90%;
+      height: 94%;
+      top:3%;
+      left:5%;
       -webkit-transition: all ease 0.5s;
       -moz-transition: all ease 0.5s;
       transition: all ease 0.5s;
       opacity: 0;
-      background: rgba(146, 154, 168, 0.9); }
-      .portfolio-item .portfolio-link .portfolio-hover:hover {
-        border-style: groove;
-        opacity: 1;}
+      background:  #bfcb91;/*rgba(200, 200, 200, 0.7);/*rgba(146, 154, 168, 0.9); */}
+      .landingpage-item .portfolio-link .portfolio-hover:hover {
+        opacity: 0.6;}
 
-       .portfolio-item .portfolio-link:hover .portfolio-centered{
-          color: #36383d;
+       .landingpage-item .portfolio-link:hover .portfolio-centered{
+          color: #fffdfa;
+          display:block;
+          text-transform:uppercase;
        }
 
-      .portfolio-item .portfolio-link .portfolio-centered{
+      .landingpage-item .portfolio-link .portfolio-centered{
+         display:none;
          position: absolute;
-         font-family: Lobster;
-         font-size: 400%;
-         font-weight: bolder;
-         color: #137b72;
+         font-family: Arquitectura;
+         font-size: 65px;
+         /*font-weight: bold;*/
+         color: #fffdfa;
          top: 50%;
          left: 50%;
          transform: translate(-50%, -50%);
@@ -205,12 +231,104 @@
          -moz-transition: all ease 0.5s;
          transition: all ease 0.5s;}
 
-      .portfolio-item .portfolio-link img{
+      .landingpage-item-md .portfolio-link .portfolio-centered-perm,
+      .landingpage-item-landscape .portfolio-link .portfolio-centered-perm{
+         display:block;
+         position: absolute;
+         font-family: Arquitectura;
+         font-size: 65px;
+         text-transform:uppercase;
+         color: #fffdfa;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         -webkit-transition: all ease 0.5s;
+         -moz-transition: all ease 0.5s;
+         transition: all ease 0.5s;}
+
+      .landingpage-item-landscape .portfolio-link .portfolio-centered-perm{
+         font-size: 40px;
+      }
+
+      .landingpage-item-landscape{
+         width: 87%;
+      }
+
+      .landingpage-item .portfolio-link img{
         max-width: 100%;
         max-height: 100%; }
-
 
 #collections * {
   z-index: 2; }
 
 
+
+
+
+
+/*    NEW     !!!  */
+.fullsize-fixed{
+  width:100%;
+  height: 100%;
+  overflow:hidden;
+  position:fixed;
+  left:0;
+  top:0;
+}
+
+.fullsize-contour-white{
+   background-color:#fffdfa;
+   padding: 15px;
+   width:100%;
+   height:100%;
+}
+
+.fullsize-contour-marron{
+   background-color:#cda772;
+   padding: 15px;
+   position:fixed;
+   height:calc(100% - 30px);
+   width:calc(100% - 30px);
+}
+
+.contour-marron{
+   background-color:#cda772;
+   padding: 15px;
+   position:relative;
+   height:100% ;/*
+   width:calc(100% - 30px);*/
+}
+
+.fullsize-container{
+   background-color: #fffdfa;
+   width:100%;
+   height:100%;
+   max-height:100%;
+   position:relativ;
+}
+
+.cy-container{
+   background-color: #fffdfa;
+   width:100%;
+   position:relative;
+}
+
+.landinpage-container-white{
+   background-color: #fffdfa;
+}
+
+
+.landinpage-white-col{
+   width: 5%;
+   height: 90%;
+
+}
+
+.landinpage-img-col{
+   background-color: #cda772;/*#fff8ed;*/
+}
+
+.landinpage-central-col{
+   background-color: #768a40;
+   text-align: center;
+}

@@ -1,59 +1,108 @@
-<div ng-include="'/static/templates/general/navbar.html'"></div>
+<div class="cy-contour-white">
+    <div class="cy-contour">
+        <div class="cy-container">
+            <div ng-include="'/static/templates/general/navbar.html'"></div>
+            <div class="main-container">
+                <div layout="column" hide-gt-sm>
+                    <md-button ng-click="selectNosProducteurs()" class="md-primary select-button">
+                        Nos producteurs
+                    </md-button>
+                    <md-button ng-click="selectNotreCharte()" class="md-primary select-button">
+                        Notre charte
+                    </md-button>
+                </div>
 
-<header class="masthead">
-  <div class="container">
-    <div class="intro-text">
-      <div class="intro-lead-in">Nos produits</div>
-      <div class="intro-heading"></div>
+
+                <div layout="column" class="content-container" style="height:700px;" >
+                    <div layout="row" flex style="font-size:28px; width:100%;">
+                       <div hide-xs hide-sm class="cy-sidenav" layout="column" flex="20" layout-align="start start" ng-controller="SideNavbarController as vm">
+                            <div class="cy-sidenav-title">{{currentSection.title}}</div>
+                            <div class="cy-sidenav-items" >
+
+                                <div ng-repeat="(key, item) in currentSection.subitems">
+                                    <div class="cy-sidenav-item"
+                                         ng-style="getStyle(item)"
+                                         layout layout-align="start center">
+                                        <md-icon md-font-icon="material-icons"
+                                                 layout-alignment="center center"
+                                                 class="cy-sidenav-icon"
+                                                 ng-style="getStyle(item)">{{item.icon}}
+                                        </md-icon>
+                                        <a href="#"
+                                           ng-click="selectSubSection(key)"
+                                           ng-style="getStyle(item)">{{item.title}}
+                                        </a>
+                                    </div>
+                                    <div class="cy-sidenav-subitem"
+                                         ng-if="item.currentLocation"
+                                         ng-repeat="(subitemkey, subitem) in currentSubSection.subitems"
+                                         layout layout-align="start center"
+                                         ng-class="{'cy-sidenav-last-subitem':$last}"
+                                         ng-style="getSubStyle(subitem)">
+                                        <md-icon md-font-icon="material-icons"
+                                                 layout-alignment="center center"
+                                                 class="cy-sidenav-icon"
+                                                 ng-style="getSubStyle(subitem)">{{subitem.icon}}
+                                        </md-icon>
+                                        <a href="#"
+                                           ng-click="selectSubItem(key, subitemkey, subitem)"
+                                           ng-style="getSubStyle(subitem)">{{subitem.title}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <md-content flex layout-padding style="background-color:#fffdfa;font-size:20px;">
+
+                            <div layout="column" flex="75" flex-offset="10" layout-align="top center">
+
+                                <div ng-if="showNosProducteurs" style="width: 90%;" layout-align="top center">
+                                    <h3 class="text-centered" style="margin-bottom:5%; color:#5D3B0A;"> Nos producteurs</h3>
+                                    <p style=" color:#5D3B0A;">
+                                        Lorem ipsum dolor sit amet, paulo fabulas perpetua no mel, alii corrumpit in vel.
+                                        <br><br>Eu per unum zril doctus, id sed dicant inimicus, iusto pertinax platonem mei at.
+                                        Ea sit scripta ancillae. Ut mea lorem augue. Pri in veri possit mollis.
+                                        Te ludus molestiae dignissim vis, quo salutatus reprehendunt te.
+
+                                        <br><br>Tempor persequeris sea eu, cu recusabo delicatissimi vis, id doctus volumus partiendo est.
+                                        Enim atomorum eam ex, eu altera prompta has, id voluptua singulis mnesarchum est.
+                                        At eam expetendis vituperata.
+                                        Sit iriure persecuti instructior eu, est mollis mediocritatem cu, sed harum suavitate no.
+
+                                        <br><br>Modo solet mei te. Quo graecis maiorum salutandi no, duo postea impedit et.
+                                        Mei eu esse dicunt maluisset, at illum persius omnesque sea.
+                                        Convenire maluisset ius an, et usu brute timeam antiopam, ei vix sumo copiosae.
+                                        Recteque interesset no eam. No est vide habemus consetetur.
+                                    </p>
+
+                                </div>
+                                <div ng-if="showNotreCharte" style="width: 90%;" layout-align="top center">
+                                    <h3 class="text-centered" style="margin-bottom:5%;color:#5D3B0A;"> Notre charte</h3>
+                                    <p style=" color:#5D3B0A;">
+                                        Alii corrumpit in vel.
+                                        <br><br>Eu per unum zril doctus, id sed dicant inimicus, iusto pertinax platonem mei at.
+                                        Ea sit scripta ancillae. Ut mea lorem augue. Pri in veri possit mollis.
+                                        Te ludus molestiae dignissim vis, quo salutatus reprehendunt te.
+
+                                        <br><br>Tempor persequeris sea eu, cu recusabo delicatissimi vis, id doctus volumus partiendo est.
+                                        Enim atomorum eam ex, eu altera prompta has, id voluptua singulis mnesarchum est.
+                                        At eam expetendis vituperata.
+                                        Sit iriure persecuti instructior eu, est mollis mediocritatem cu, sed harum suavitate no.
+
+                                        <br><br>Modo solet mei te. Quo graecis maiorum salutandi no, duo postea impedit et.
+                                        Mei eu esse dicunt maluisset, at illum persius omnesque sea.
+                                        Convenire maluisset ius an, et usu brute timeam antiopam, ei vix sumo copiosae.
+                                        Recteque interesset no eam. No est vide habemus consetetur.
+                                    </p>
+                                </div>
+                            </div>
+                            <div flex></div>
+                        </md-content>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-include="'/static/templates/general/footer.html'"></div>
     </div>
-  </div>
-</header>
-
-<section class="central-container row">
-    <div class="central-text-container">
-Lorem ipsum dolor sit amet, paulo fabulas perpetua no mel, alii corrumpit in vel.
-<br><br>Eu per unum zril doctus, id sed dicant inimicus, iusto pertinax platonem mei at.
-Ea sit scripta ancillae. Ut mea lorem augue. Pri in veri possit mollis.
-        Te ludus molestiae dignissim vis, quo salutatus reprehendunt te.
-
-<br><br>Tempor persequeris sea eu, cu recusabo delicatissimi vis, id doctus volumus partiendo est.
-        Enim atomorum eam ex, eu altera prompta has, id voluptua singulis mnesarchum est.
-        At eam expetendis vituperata.
-        Sit iriure persecuti instructior eu, est mollis mediocritatem cu, sed harum suavitate no.
-
-<br><br>Modo solet mei te. Quo graecis maiorum salutandi no, duo postea impedit et.
-        Mei eu esse dicunt maluisset, at illum persius omnesque sea.
-        Convenire maluisset ius an, et usu brute timeam antiopam, ei vix sumo copiosae.
-        Recteque interesset no eam. No est vide habemus consetetur.
-
-        <!--
-<br><br>Vix dicam offendit luptatum cu, adhuc quaeque ad ius, ad dicit nihil duo.
-        Vis cu quem modo scripserit, eligendi adipiscing ea pri. Mei no eirmod necessitatibus, suas libris ius te.
-        Mel ignota fabulas deterruisset ne, omnis sonet animal per in.
-        Ut hinc vitae probatus his, sea indoctum persequeris an.
-        At dicta graeci repudiandae pro, in sed mazim epicuri pertinax.
-
-<br><br>Vis ad laboramus consectetuer.
-        No illud torquatos mediocritatem nec, pro te justo summo debitis.
-        Eu eum mazim elitr vivendum.
-        Ut per diam docendi repudiandae, lorem nusquam no pro.
-        Duis scripserit his te, has tamquam argumentum ea.
-
-<br><br>Modo solet mei te. Quo graecis maiorum salutandi no, duo postea impedit et.
-        Mei eu esse dicunt maluisset, at illum persius omnesque sea.
-        Convenire maluisset ius an, et usu brute timeam antiopam, ei vix sumo copiosae.
-        Recteque interesset no eam. No est vide habemus consetetur.
-
-<br><br>Vix dicam offendit luptatum cu, adhuc quaeque ad ius, ad dicit nihil duo.
-        Vis cu quem modo scripserit, eligendi adipiscing ea pri. Mei no eirmod necessitatibus, suas libris ius te.
-        Mel ignota fabulas deterruisset ne, omnis sonet animal per in.
-        Ut hinc vitae probatus his, sea indoctum persequeris an.
-        At dicta graeci repudiandae pro, in sed mazim epicuri pertinax.
-
-<br><br>Vis ad laboramus consectetuer.
-        No illud torquatos mediocritatem nec, pro te justo summo debitis.
-        Eu eum mazim elitr vivendum.
-        Ut per diam docendi repudiandae, lorem nusquam no pro.
-        Duis scripserit his te, has tamquam argumentum ea.-->
-   </div>
-</section>
+</div>

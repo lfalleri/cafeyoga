@@ -3,7 +3,13 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
 from authentication.serializers import AccountSerializer
-from .models import Lesson, Reservation, Professeur
+from .models import Lesson, Reservation, Professeur, UploadedImage, Transaction, Formule,CodeReduction
+
+
+class UploadedImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedImage
+        fields = ('id', 'image',)
 
 
 class ProfesseurSerializer(serializers.ModelSerializer):
@@ -35,7 +41,7 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('id', 'account', 'lesson', 'nb_personnes', 'checked_present', 'confirmed', 'created', 'updated')
+        fields = ('id', 'account', 'lesson', 'nb_personnes', 'checked_present', 'nb_present', 'confirmed', 'created', 'updated')
 
         def create(self, validated_data):
             print("Reservation.Meta.create() ")
@@ -47,3 +53,22 @@ class ReservationSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
 
+
+class FormuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Formule
+        fields = ('id', 'montant', 'nb_cours', 'description')
+
+
+class CodeReductionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CodeReduction
+        fields = ('id', 'code', 'pourcentage')
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    account = AccountSerializer(read_only=False, required=False)
+
+    class Meta:
+        model = Transaction
+        fields = ('id', 'account', 'montant', 'token', 'created')
