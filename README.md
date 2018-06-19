@@ -1,4 +1,3 @@
-# thinkster-django-angular-boilerplate
 
 ## Installation
 
@@ -18,125 +17,122 @@
 * `$ python manage.py runserver`
 
 
-#####################################
-# Création de la DATABASE postrges :
-#####################################
- $ sudo su - postgres
- $ psql
- $ CREATE DATABASE <myproject>;
- $ CREATE USER <myprojectuser> WITH PASSWORD '<password>';
- $ ALTER ROLE <myprojectuser> SET client_encoding TO 'utf8';
- $ ALTER ROLE <myprojectuser> SET default_transaction_isolation TO 'read committed';
- $ ALTER ROLE <myprojectuser> SET timezone TO 'Europe/Paris';
- $ GRANT ALL PRIVILEGES ON DATABASE <myproject> TO <myprojectuser>;
- $ \q
- $ exit
 
-#####################################
-# Deploiement sur Heroku :
-#####################################
- $  pip freeze > requirements.txt 
- $  git init
- $  vim .gitignore  # *.pyc, static ...
- $  git add .
- $  heroku create <app>
- $  heroku stack:set cedar-14
- $  heroku buildpacks:add https://github.com/heroku/heroku-buildpack-multi.git
- $  heroku config:set PGBOUNCER_MAX_CLIENT_CONN=120
- $  heroku addons:create heroku-postgresql:hobby-dev
- $  vim <app>/uwsgi.ini 
+## Création de la DATABASE postrges :
 
---->
-# uwsgi.ini
+* '$ sudo su - postgres'
+* '$ psql'
+* '$ CREATE DATABASE <myproject>;'
+* '$ CREATE USER <myprojectuser> WITH PASSWORD '<password>';'
+* '$ ALTER ROLE <myprojectuser> SET client_encoding TO 'utf8';'
+* '$ ALTER ROLE <myprojectuser> SET default_transaction_isolation TO 'read committed';'
+* '$ ALTER ROLE <myprojectuser> SET timezone TO 'Europe/Paris';'
+* '$ GRANT ALL PRIVILEGES ON DATABASE <myproject> TO <myprojectuser>;'
+* '$ \q'
+* '$ exit'
+
+
+## Deploiement sur Heroku :
+* '$  pip freeze > requirements.txt '
+* '$  git init'
+* '$  vim .gitignore  # *.pyc, static ...'
+* '$  git add .'
+* '$  heroku create <app>'
+* '$  heroku stack:set cedar-14'
+* '$  heroku buildpacks:add https://github.com/heroku/heroku-buildpack-multi.git'
+* '$  heroku config:set PGBOUNCER_MAX_CLIENT_CONN=120'
+* '$  heroku addons:create heroku-postgresql:hobby-dev'
+* '$  vim <app>/uwsgi.ini'
+
+
+## uwsgi.ini
 [uwsgi]
-http-socket = /tmp/nginx.socket
-master = true
-processes = 4
-die-on-term = true
-memory-report = true
-enable-threads = true
-hook-accepting1 = exec:touch /tmp/app-initialized
-env = DJANGO_SETTINGS_MODULE=<app>.settings
-module = <app>.wsgi:application
-<----
+* http-socket = /tmp/nginx.socket
+* master = true
+* processes = 4
+* die-on-term = true
+* memory-report = true
+* enable-threads = true
+* hook-accepting1 = exec:touch /tmp/app-initialized
+* env = DJANGO_SETTINGS_MODULE=<app>.settings
+* module = <app>.wsgi:application
 
- $  git add uwsgi.ini 
- $  vim <app>/settings.py
 
---->
-import dj_database_url
+* '$  git add uwsgi.ini '
+* '$  vim <app>/settings.py'
 
-DATABASES = {'default': dj_database_url.config()}
+## <app>/settings.py
+* import dj_database_url
 
-if bool(os.environ.get('LOCAL_DEV', True)):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'papyoga',
-            'USER': 'veroniquepagnon',
-            'PASSWORD': 'veroyoga',
-            'HOST': 'localhost',
-            'PORT': '',
-        }
-    }
-<---
+* DATABASES = {'default': dj_database_url.config()}
 
- $ vim Procfile
+* if bool(os.environ.get('LOCAL_DEV', True)):
+*    DATABASES = {
+*        'default': {
+*            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+*            'NAME': 'papyoga',
+*            'USER': 'veroniquepagnon',
+*            'PASSWORD': 'veroyoga',
+*            'HOST': 'localhost',
+*            'PORT': '',
+*        }
+*    }
 
---->
-# Procfile with nginx, pgbouncer, uWSGI and django-q
-web: bin/start-nginx bin/start-pgbouncer-stunnel uwsgi uwsgi.ini
-worker: bin/start-pgbouncer-stunnel python manage.py qcluster
---->
 
- $ vim runtime.txt
+## Procfile
 
---->
-python-2.7.14
-<---
+ Procfile with nginx, pgbouncer, uWSGI and django-q
+* web: bin/start-nginx bin/start-pgbouncer-stunnel uwsgi uwsgi.ini
+* worker: bin/start-pgbouncer-stunnel python manage.py qcluster
 
+
+## Procfile
+
+* python-2.7.14
+
+## <app>/wsgi.py
  $ vim <app>/wsgi.py
 
---->
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<app>.settings")
 
-from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
+* import os
+* os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<app>.settings")
 
-application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
-<---
+* from django.core.wsgi import get_wsgi_application
+* from whitenoise.django import DjangoWhiteNoise
 
- $ git push heroku master
- $ heroku run python manage.py syncdb
+* application = get_wsgi_application()
+* application = DjangoWhiteNoise(application)
 
 
-#####################################
-# Nom de domaine 
-#####################################
+* '$ git push heroku master'
+* '$ heroku run python manage.py syncdb'
 
- $ heroku domains:add <domaine.fr> -a <appli>
- $ heroku domains:add <www.domaine.fr> -a <appli>
 
---->
-lfalleri|~$ heroku domains -a pas-a-pas-yoga
- ▸    heroku-cli: update available from 6.14.30-304197d to 6.15.22-3f1c4bd
-=== pas-a-pas-yoga Heroku Domain
-pas-a-pas-yoga.herokuapp.com
 
-=== pas-a-pas-yoga Custom Domains
-Domain Name            DNS Record Type  DNS Target
-─────────────────────  ───────────────  ───────────────────────────────────
-www.pas-a-pas-yoga.fr  CNAME            www.pas-a-pas-yoga.fr.herokudns.com
-pas-a-pas-yoga.fr      ALIAS or ANAME   pas-a-pas-yoga.fr.herokudns.com
-<---
+## Nom de domaine 
 
- $ Amen.fr :
- Configuration DNS -> configuration avancée
 
-pas-a-pas-yoga.fr.         TXT       "pas-a-pas-yoga.fr.herokudns.com."
-www.pas-a-pas-yoga.fr.    CNAME      www.pas-a-pas-yoga.herokuapp.com.
+* '$ heroku domains:add <domaine.fr> -a <app>'
+* '$ heroku domains:add <www.domaine.fr> -a <app>'
+
+
+* '$ heroku domains -a pas-a-pas-yoga'
+* ▸    heroku-cli: update available from 6.14.30-304197d to 6.15.22-3f1c4bd
+* === pas-a-pas-yoga Heroku Domain
+* pas-a-pas-yoga.herokuapp.com
+
+* === pas-a-pas-yoga Custom Domains
+* Domain Name            DNS Record Type  DNS Target
+* ─────────────────────  ───────────────  ───────────────────────────────────
+* www.pas-a-pas-yoga.fr  CNAME            www.pas-a-pas-yoga.fr.herokudns.com
+* pas-a-pas-yoga.fr      ALIAS or ANAME   pas-a-pas-yoga.fr.herokudns.com
+
+
+## Amen.fr :
+* Configuration DNS -> configuration avancée
+
+* pas-a-pas-yoga.fr.         TXT       "pas-a-pas-yoga.fr.herokudns.com."
+* www.pas-a-pas-yoga.fr.    CNAME      www.pas-a-pas-yoga.herokuapp.com.
 
 
   "dependencies": {
