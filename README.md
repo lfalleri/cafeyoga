@@ -20,29 +20,29 @@
 
 ## Création de la DATABASE postrges :
 
-* '$ sudo su - postgres'
-* '$ psql'
-* '$ CREATE DATABASE <myproject>;'
-* '$ CREATE USER <myprojectuser> WITH PASSWORD '<password>';'
-* '$ ALTER ROLE <myprojectuser> SET client_encoding TO 'utf8';'
-* '$ ALTER ROLE <myprojectuser> SET default_transaction_isolation TO 'read committed';'
-* '$ ALTER ROLE <myprojectuser> SET timezone TO 'Europe/Paris';'
-* '$ GRANT ALL PRIVILEGES ON DATABASE <myproject> TO <myprojectuser>;'
-* '$ \q'
-* '$ exit'
+* `$ sudo su - postgres`
+* `$ psql`
+* `$ CREATE DATABASE <myproject>;`
+* `$ CREATE USER <myprojectuser> WITH PASSWORD '<password>';`
+* `$ ALTER ROLE <myprojectuser> SET client_encoding TO 'utf8';`
+* `$ ALTER ROLE <myprojectuser> SET default_transaction_isolation TO 'read committed';`
+* `$ ALTER ROLE <myprojectuser> SET timezone TO 'Europe/Paris';`
+* `$ GRANT ALL PRIVILEGES ON DATABASE <myproject> TO <myprojectuser>;`
+* `$ \q`
+* `$ exit`
 
 
 ## Deploiement sur Heroku :
-* '$  pip freeze > requirements.txt '
-* '$  git init'
-* '$  vim .gitignore  # *.pyc, static ...'
-* '$  git add .'
-* '$  heroku create <app>'
-* '$  heroku stack:set cedar-14'
-* '$  heroku buildpacks:add https://github.com/heroku/heroku-buildpack-multi.git'
-* '$  heroku config:set PGBOUNCER_MAX_CLIENT_CONN=120'
-* '$  heroku addons:create heroku-postgresql:hobby-dev'
-* '$  vim <app>/uwsgi.ini'
+* `$  pip freeze > requirements.txt `
+* `$  git init`
+* `$  vim .gitignore  # *.pyc, static ...`
+* `$  git add .`
+* `$  heroku create <app>`
+* `$  heroku stack:set cedar-14`
+* `$  heroku buildpacks:add https://github.com/heroku/heroku-buildpack-multi.git`
+* `$  heroku config:set PGBOUNCER_MAX_CLIENT_CONN=120`
+* `$  heroku addons:create heroku-postgresql:hobby-dev`
+* `$  vim <app>/uwsgi.ini`
 
 
 ## uwsgi.ini
@@ -58,8 +58,8 @@
 * module = <app>.wsgi:application
 
 
-* '$  git add uwsgi.ini '
-* '$  vim <app>/settings.py'
+* `$  git add uwsgi.ini `
+* `$  vim <app>/settings.py`
 
 ## <app>/settings.py
 * import dj_database_url
@@ -104,19 +104,19 @@
 * application = DjangoWhiteNoise(application)
 
 
-* '$ git push heroku master'
-* '$ heroku run python manage.py syncdb'
+* `$ git push heroku master`
+* `$ heroku run python manage.py syncdb`
 
 
 
 ## Nom de domaine 
 
 
-* '$ heroku domains:add <domaine.fr> -a <app>'
-* '$ heroku domains:add <www.domaine.fr> -a <app>'
+* `$ heroku domains:add <domaine.fr> -a <app>`
+* `$ heroku domains:add <www.domaine.fr> -a <app>`
 
 
-* '$ heroku domains -a pas-a-pas-yoga'
+* `$ heroku domains -a pas-a-pas-yoga`
 * ▸    heroku-cli: update available from 6.14.30-304197d to 6.15.22-3f1c4bd
 * === pas-a-pas-yoga Heroku Domain
 * pas-a-pas-yoga.herokuapp.com
