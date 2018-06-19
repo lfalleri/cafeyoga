@@ -46,44 +46,44 @@
 
 
 ## uwsgi.ini
-[uwsgi]__
- http-socket = /tmp/nginx.socket__
- master = true__
- processes = 4__
- die-on-term = true__
- memory-report = true__
- enable-threads = true__
- hook-accepting1 = exec:touch /tmp/app-initialized__
- env = DJANGO_SETTINGS_MODULE=<app>.settings__
- module = <app>.wsgi:application__
+[uwsgi]  
+ http-socket = /tmp/nginx.socket  
+ master = true  
+ processes = 4  
+ die-on-term = true  
+ memory-report = true  
+ enable-threads = true  
+ hook-accepting1 = exec:touch /tmp/app-initialized  
+ env = DJANGO_SETTINGS_MODULE=<app>.settings  
+ module = <app>.wsgi:application  
 
 
 * `$  git add uwsgi.ini `
 * `$  vim <app>/settings.py`
 
 ## <app>/settings.py
- import dj_database_url__
+ import dj_database_url  
 
- DATABASES = {'default': dj_database_url.config()}__
+ DATABASES = {'default': dj_database_url.config()}  
 
- if bool(os.environ.get('LOCAL_DEV', True)):__
-    DATABASES = {__
-        'default': {__
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',__
-            'NAME': 'papyoga',__
-            'USER': 'veroniquepagnon',__
-            'PASSWORD': 'veroyoga',__
-            'HOST': 'localhost',__
-            'PORT': '',__
-        }__
-    }__
+ if bool(os.environ.get('LOCAL_DEV', True)):  
+    DATABASES = {  
+        'default': {  
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+            'NAME': 'papyoga',  
+            'USER': 'veroniquepagnon',  
+            'PASSWORD': 'veroyoga',  
+            'HOST': 'localhost',  
+            'PORT': '',  
+        }  
+    }  
 
 
 ## Procfile
 
- # Procfile with nginx, pgbouncer, uWSGI and django-q__
- web: bin/start-nginx bin/start-pgbouncer-stunnel uwsgi uwsgi.ini__
- worker: bin/start-pgbouncer-stunnel python manage.py qcluster__
+ # Procfile with nginx, pgbouncer, uWSGI and django-q  
+ web: bin/start-nginx bin/start-pgbouncer-stunnel uwsgi uwsgi.ini  
+ worker: bin/start-pgbouncer-stunnel python manage.py qcluster  
 
 
 ## Procfile
@@ -94,14 +94,14 @@
 * `$ vim <app>/wsgi.py`
 
 
- import os__
- os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<app>.settings")__
+ import os  
+ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<app>.settings")  
 
- from django.core.wsgi import get_wsgi_application__
- from whitenoise.django import DjangoWhiteNoise__
+ from django.core.wsgi import get_wsgi_application  
+ from whitenoise.django import DjangoWhiteNoise  
 
- application = get_wsgi_application()__
- application = DjangoWhiteNoise(application)__
+ application = get_wsgi_application()  
+ application = DjangoWhiteNoise(application)  
 
 
 * `$ git push heroku master`
