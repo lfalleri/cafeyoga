@@ -88,6 +88,10 @@
       controller: 'BoutiqueController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/boutique/expositions.html'
+    }).when('/evenements',{
+      controller: 'EvenementsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/evenements/evenements.html'
     }).otherwise({
        redirectTo:"/"
     });

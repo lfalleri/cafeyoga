@@ -130,3 +130,10 @@
   line-height: 0;
   border-bottom: 1px dotted #3f3f3f;
 }
+
+.reservation-input-landscape{
+   width: 50%;
+}
+.reservation-input-portrait{
+   width: 100%;
+}

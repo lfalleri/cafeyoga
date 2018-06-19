@@ -111,7 +111,6 @@
            }else{
               RestaurantService.displayStates[key] = false;
            }
-           console.log(key, RestaurantService.displayStates[key]);
        });
     }
 

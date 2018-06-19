@@ -9,9 +9,9 @@
     .module('cafeyoga.restaurant.controllers')
     .controller('RestaurantController', RestaurantController);
 
-  RestaurantController.$inject = ['RestaurantService', 'Authentication', '$scope'];
+  RestaurantController.$inject = ['RestaurantService', 'Authentication', '$scope','Layout'];
 
-  function RestaurantController(RestaurantService, Authentication, $scope) {
+  function RestaurantController(RestaurantService, Authentication, $scope, Layout) {
       console.log("RestaurantController");
 
       var vm = this;
@@ -57,7 +57,6 @@
             + la liste correspondantes des slots d'ouverture ->
                   [[11:30,12:00,12:30,...], [10:30,11:00,...], ...] (n elements)
          */
-         console.log("config : ",config);
          for(var jour = 0; jour < 30 ; jour++){
            /* date sera le jour courant */
            var date = new Date().addDays(jour);
@@ -80,7 +79,7 @@
                   break;
                }
             }
-            if(closure_day) break;
+            if(closure_day) continue;
 
             /* date n'est pas un jour de fermeture exceptionnelle */
             for(var j=0;j<jours.length;j++){
@@ -136,6 +135,11 @@
       }
 
       $scope.changeHour = function(){
+         $scope.error = undefined;
+         $scope.success = undefined;
+      }
+
+      $scope.changeNbPersons = function(){
          $scope.error = undefined;
          $scope.success = undefined;
       }
@@ -224,6 +228,19 @@
                $scope.success = undefined;
             });
 
+      }
+
+      this.$doCheck = function(){
+         console.log('this.docheck()');
+         $scope.portrait = Layout.detectScreenOrientation();
+         var view = angular.element( document.querySelector( '.reservation-input' ) );
+         if($scope.portrait){
+            view.removeClass('reservation-input-landscape');
+            view.addClass('reservation-input-portrait');
+         }else{
+            view.addClass('reservation-input-landscape');
+            view.removeClass('reservation-input-portrait');
+         }
       }
   };
 })();

@@ -11,5 +11,5 @@
     .module('cafeyoga.layout.controllers', []);
 
   angular
-    .module('cafeyoga.layout.services', []);
+    .module('cafeyoga.layout.services', ['ngCookies']);
 })();

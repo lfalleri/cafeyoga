@@ -82,6 +82,12 @@
                 });
 
              });
+
+             $scope.$watch(function() { return Authentication.getSettingsDisplay(); }, function (newValue) {
+                 $scope.state.showUpdateProfile = newValue['profile'];
+                 $scope.state.showLessonHistoric = newValue['lessons'];
+                 $scope.state.showTransactionHistoric = newValue['historic'];
+             }, true);
           }
        });
     }

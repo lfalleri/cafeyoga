@@ -17,6 +17,7 @@
 
      activate();
      $scope.expos = [];
+     $scope.all_expos = [];
      $scope.showExpoEnCours = true;
      $scope.showExpoPassees = false;
 
@@ -25,12 +26,12 @@
             if(!success) return;
 
             $scope.createurs = createurs;
-            console.log("Createurs : ", createurs);
          });
 
          BoutiqueService.getAllExpos(function(success, expos){
             if(!success) return;
 
+            $scope.all_expos = expos;
             expos.forEach(function(e){
                if(e.en_cours){
                   $scope.currentExposition = e;

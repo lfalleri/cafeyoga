@@ -21,7 +21,7 @@ and (max-device-width : 320px) {
 }
 
   .cy-button{
-    padding:  5px 5px;
+    padding:  0 5px;
   }
 
   .historic-table table,
@@ -75,7 +75,7 @@ and (max-device-width : 320px) {
   }
 
   .menu-burger-item{
-     font-size: 13px;
+     font-size: 18px;
   }
 
   .menu-burger-subitem{
@@ -193,7 +193,7 @@ and (max-device-height : 480px)
   }
 
   .cy-button{
-    padding:  5px 5px;
+    padding:  0 5px;
   }
 
   .select-button{
@@ -247,7 +247,7 @@ and (max-device-height : 480px)
   }
 
   .menu-burger-item{
-     font-size: 16px;
+     font-size: 18px;
   }
 
   .menu-burger-subitem{
@@ -365,7 +365,7 @@ and (max-device-width : 768px) {
 
 
   .cy-button{
-    padding:  5px 10px;
+    padding:  0 10px;
   }
 
   .select-button{
@@ -423,7 +423,7 @@ and (max-device-width : 768px) {
   }
 
   .menu-burger-item{
-     font-size: 16px;
+     font-size: 18px;
   }
 
   .menu-burger-subitem{
@@ -527,7 +527,7 @@ and (max-device-width : 1024px) {
   }
 
   .cy-button{
-    padding:  5px 15px;
+    padding:  0 15px;
   }
 
   .long-button{
@@ -637,7 +637,7 @@ and (max-device-width : 1254px)  {
 
   .cy-button{
     font-size:15px;
-    padding:  5px 15px;
+    padding:  0 15px;
     min-width: 150px;
   }
 
@@ -719,7 +719,7 @@ and (max-device-width : 1524px)  {
 
   .cy-button{
     font-size:16px;
-    padding:  5px 10px;
+    padding:  0 10px;
     min-width: 170px;
   }
 
@@ -792,7 +792,7 @@ and (max-width : 1824px)  {
   }
 
   .cy-button{
-    padding:  5px 30px;
+    padding:  0 30px;
     min-width: 200px;
     font-size:18px;
   }
@@ -846,7 +846,7 @@ and (min-width : 1824px) {
 
   .cy-button{
     font-size:20px;
-    padding:  5px 50px;
+    padding:  0 50px;
     min-width: 250px;
   }
 
@@ -1090,5 +1090,33 @@ and (max-device-height : 975px) {
 
   .landingpage-row-md {
     min-height: 18%;
+  }
+}
+
+
+/* Ration minimal */
+@media (min-aspect-ratio: 2/1) {
+  .landingpage-item{
+     max-width:75%;
+  }
+}
+
+@media (min-aspect-ratio: 34/19) and (max-aspect-ratio: 2/1) {
+  .landingpage-item{
+     max-width:95%;
+  }
+}
+
+@media (min-aspect-ratio: 16/9) and (max-aspect-ratio: 34/19)
+ {
+  .landingpage-item{
+     max-width:100%;
+  }
+}
+
+@media (max-aspect-ratio: 16/9)
+ {
+  .landingpage-item{
+     max-width:100%;
   }
 }

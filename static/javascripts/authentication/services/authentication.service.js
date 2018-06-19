@@ -35,7 +35,14 @@
       fullAccount : {},
       getUsers: getUsers,
 
-      gotoLogin : gotoLogin,
+      gotoLoginAndBackTo : gotoLoginAndBackTo,
+      backTo: undefined,
+
+      getSettingsDisplay: getSettingsDisplay,
+      settingsDisplay : settingsDisplay,
+      displayStates : {'profile' : true,
+                       'lessons' : false,
+                        'historic' : false}
     };
 
     return Authentication;
@@ -105,7 +112,13 @@
             window.localStorage.setItem('fullAccount', JSON.stringify(fullAccount));
             Authentication.fullAccount = fullAccount;
         });
-        if(back) $rootScope.back();
+        if(Authentication.backTo !== undefined){
+           var to = Authentication.backTo;
+           Authentication.backTo = undefined;
+           $location.url(to);
+        }else if(back){
+            $rootScope.back();
+        }
         callback(true,"Connection réussie");
       }
 
@@ -202,6 +215,7 @@
        if (!$cookies.authenticatedAccount) {
           return;
        }
+       console.log($cookies.authenticatedAccount);
        return JSON.parse($cookies.authenticatedAccount);
     }
 
@@ -299,8 +313,23 @@
        });
     }
 
-    function gotoLogin(){
-        $location.url("/login");
+    function gotoLoginAndBackTo(back){
+        Authentication.backTo = back;
+        $location.url('/monespace');
+    }
+
+    function settingsDisplay(section){
+       Object.keys(Authentication.displayStates).forEach(function(key) {
+           if(key === section){
+              Authentication.displayStates[key] = true;
+           }else{
+              Authentication.displayStates[key] = false;
+           }
+       });
+    }
+
+    function getSettingsDisplay(){
+       return Authentication.displayStates;
     }
   }
 })();

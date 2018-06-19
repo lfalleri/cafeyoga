@@ -11,7 +11,8 @@ from authentication.views import AccountViewSet, \
                                  LogoutView, \
                                  FullAccountView, \
                                  SettingsView, \
-                                 LandingPageView
+                                 LandingPageView, \
+                                 ConfigView
 
 from yoga.views import CalendarView, \
                        LessonView, \
@@ -31,7 +32,9 @@ from restaurant.views import CarteView, \
                              RestaurantReservationView
 
 from boutique.views import CreateurView, \
-                            ExpositionView
+                           ExpositionView
+
+from evenements.views import EvenementView
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
@@ -53,6 +56,9 @@ urlpatterns = patterns(
     url(r'^api/v1/auth/accounts/$', AccountView.as_view(), name='accounts'),
     url(r'^api/v1/auth/update-profile/$', AccountView.as_view(), name='update'),
 
+    # Config view
+    url(r'^api/v1/config/$', ConfigView.as_view(), name='config'),
+
     # Yoga Views
     url(r'^api/v1/calendar/$', CalendarView.as_view(), name='calendar'),
     url(r'^api/v1/yoga/lessons/$', LessonView.as_view(), name='lesson'),
@@ -65,12 +71,15 @@ urlpatterns = patterns(
 
     # Restaurant Views
     url(r'^api/v1/restaurant/menu/$', CarteView.as_view(), name='carte'),
-    url(r'^api/v1/restaurant/config/$', RestaurantConfigView.as_view(), name='carte'),
+    url(r'^api/v1/restaurant/config/$', RestaurantConfigView.as_view(), name='restaurant_config'),
     url(r'^api/v1/restaurant/reservation/$', RestaurantReservationView.as_view(), name='reservation'),
 
     # Boutique Views
     url(r'^api/v1/boutique/createurs/$', CreateurView.as_view(), name='createurs'),
     url(r'^api/v1/boutique/expos/$', ExpositionView.as_view(), name='expos'),
+
+    # Evenements Views
+    url(r'^api/v1/evenements/$', EvenementView.as_view(), name='evenements'),
 
     # Admin Views
     url(r'^admin/', include(admin.site.urls)),

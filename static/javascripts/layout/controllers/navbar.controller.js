@@ -41,7 +41,8 @@
                               displayEvenementsSubItems : false,
                               displayMonCompteSubItems : false,};
     $scope.itemList = [ { title : 'Restaurant',
-                          link: '/restaurant/nosproduits',
+                          display: true,
+                          link: '/restaurant/carte',
                           displaySubItems: false,
                           subitems : [{title: 'Nos produits',
                                       link:'/restaurant/nosproduits',
@@ -54,6 +55,7 @@
                                       {title: 'Notre carte des vins',link:'/restaurant/carte',
                                        subitems:[]}]},
                         { title : 'Yoga',
+                          display: true,
                           link: '/yoga/calendrier',
                           displaySubItems: false,
                           subitems : [{title: 'Calendrier des cours',
@@ -61,38 +63,60 @@
                                        subitems:[]},
                                       {title: 'Nos professeurs',
                                        link:'/yoga/professeurs',
+                                       subitems:[]},
+                                       {title: 'Recharger mon compte',
+                                       link:'/yoga/recharge',
                                        subitems:[]}]},
                         { title : 'Boutique & Expo',
+                          display: true,
                           link: '/boutique',
                           displaySubItems: false,
-                          subitems : []},
+                          subitems : [{title: 'Créateurs',
+                                       link:'/boutique/createurs',
+                                       subitems:[]},
+                                      {title: 'Expositions',
+                                       link:'/boutique/expositions',
+                                       subitems:[]},
+                                       ]},
                         { title : 'Evènements',
+                          display: true,
                           link: '/evenements',
                           displaySubItems: false,
                           subitems : []},
                         { title : 'Mon compte',
+                          display: true,
                           link: '/settings',
                           displaySubItems: false,
-                          subitems : []}];
+                          subitems : []},
+                        {title: 'Se déconnecter',
+                         display: false,
+                         action: function(){$scope.logout();
+                                            $scope.itemList[$scope.itemList.length - 1].display = false;
+                                            $scope.toggleMenu();
+                                            $location.url('/');},
+                         displaySubItems: false,
+                         subitems : []
+                        }];
 
     $scope.navBar = {'restaurant' : {title : 'Restaurant',
-                                     link: '/restaurant/nosproduits',
+                                     link: '/restaurant/carte',
                                      display : true,
                                      isIcon : false,
                                      displaySubItems: false,
                                      currentLocation : false,
-                                     subitems : {'nosproduits':{title: 'Nos produits',
-                                                                link:'/restaurant/nosproduits',
-                                                                currentLocation : false,
-                                                                display :true,
-                                                                subitems:{}
-                                                                },
-                                                  'carte' : {title: 'Notre carte',
+                                     subitems : {'carte' : {title: 'Notre carte',
                                                              link:'/restaurant/carte',
                                                              currentLocation : false,
                                                              display :true,
                                                              subitems:{}
                                                              },
+                                                  'nosproduits':{title: 'Nos produits',
+                                                                link:'/restaurant/nosproduits',
+                                                                currentLocation : false,
+                                                                display :true,
+                                                                subitems:{}
+                                                                },
+
                                                   'reservation' : {title: 'Réserver',
                                                                   link:'/restaurant/reservation',
                                                                   currentLocation : false,
@@ -117,8 +141,12 @@
                                                                    link:'/yoga/professeurs',
                                                                    display :true,
                                                                    subitems:{}},
+                                                  'recharge':{title:'Recréditer mon compte',
+                                                              link:'/yoga/recharge',
+                                                              display :true,
+                                                              subitems:{}},
                                                   'reservation':{title:'Réservation'},
-                                                  'annulation':{title:'Annulation'}
+                                                  'annulation':{title:'Annulation'},
                                                  }
                                       },
                        'boutique' :   {title : 'Boutique & Expo',
@@ -133,7 +161,7 @@
                                                                 subitems:{}
                                                                 },
                                                   'expositions' : {title: 'Nos expositions',
-                                                                   link:'/boutique//expositions',
+                                                                   link:'/boutique/expositions',
                                                                    display :true,
                                                                    subitems:{}},}
                                        },
@@ -218,10 +246,8 @@
     $scope.getStyle = function(index, subitem){
        var offset = (index+1)*50 + 10;
        if(subitem.currentLocation){
-          console.log("Current location : offset = ", offset.toString());
           return {'background':'#fffdfa', 'color' : '#3e4826', 'top': offset.toString() + 'px','border-bottom' : '2px solid #3e4826'};
        }
-       console.log("Not current location : offset = ", offset.toString());
        return {'top':offset.toString()+ 'px'};
     }
 
@@ -259,25 +285,17 @@
          Authentication.getFullAccount(function(value){
             $scope.account = value;
             if(!angular.equals($scope.account,{})){
-               console.log("Loggé : ", $scope.account );
                $scope.navBar["logout"].display = true;
-               //$scope.navBar["settings"].isIcon = true;
+               var logout = $scope.itemList[$scope.itemList.length - 1];
+               logout.display = true;
             }
          });
-
          var location = $location.path().split('/');
-         console.log(location);
-         //$scope.displaySubItems(location[1]);
-
-        // $scope.pageTitle = title[location[1]];
-
-
          if(location.length > 2)
             $scope.setCurrentLocation(location[1],location[2]);
          else{
             $scope.setCurrentLocation(location[1],undefined);
          }
-        //    $scope.pageSubTitle = title[location[2]];
     }
 
     /**
@@ -294,32 +312,39 @@
           $scope.logout(true);
        }
 
-       var locations = {'restaurant': '/restaurant/nosproduits',
+       var locations = {'restaurant': '/restaurant/carte',
                         'yoga' : '/yoga/calendrier',
                         'createurs': '/boutique/createurs',
                         'expositions' : '/boutique/expositions',
-                        'evenements': '/',
+                        'boutique' : '/boutique/createurs',
+                        'evenements': '/evenements',
                         'settings' : '/settings',
                         'nosproduits' : '/restaurant/nosproduits',
                         'carte' : '/restaurant/carte',
                         'professeurs': '/yoga/professeurs',
                         'calendrier': '/yoga/calendrier',
+                        'recharge': '/yoga/recharge',
                         'reservation': '/restaurant/reservation'};
        $location.url(locations[location]);
     }
 
     $scope.clickItem = function(item){
-       if(item.subitems.length == 0 ){
-          $location.url(item.link);
-       }
-       $scope.itemList.forEach(function(i){
-           if(i===item){
+       if(item.hasOwnProperty('action')){
+          item.action();
+       }else{
+          if(item.subitems.length == 0 ){
+              $location.url(item.link);
+          }
+          $scope.itemList.forEach(function(i){
+          if(i===item){
               i.displaySubItems = !i.displaySubItems;
-           }else{
+          }else{
               i.displaySubItems = false;
-           }
-
+          }
        });
+
+       }
+
     }
 
 

@@ -36,6 +36,9 @@
        getLocalePendingReservationByAccount: getLocalePendingReservationByAccount,
        gotoReservationIfAny : gotoReservationIfAny,
        pendingReservationByAccount: {},
+      /* storeAnonymousPreReservation: storeAnonymousPreReservation,
+       getAnonymousPreReservation:AnonymousPreReservation,
+       anonymousPreReservation: undefined;*/
 
        /* Pre-confirmation cancel API */
        stageCancellation: stageCancellation,
@@ -273,6 +276,16 @@
           }
        });
     }
+
+  /*  function storeAnonymousPreReservation(lesson){
+       YogaService.anonymousPreReservation = lesson;
+    }
+
+    function getAnonymousPreReservation(){
+       var lesson = YogaService.anonymousPreReservation;
+       YogaService.anonymousPreReservation = undefined;
+       return lesson;
+    }*/
 
     /*************************************
      *   Confirmed reservations API      *
@@ -528,7 +541,7 @@
               callback(true, []);
            },
            function(data, status, headers, config){
-              callback(false, ["Une erreur est survenue lors de la transaction"]);
+              callback(false, "Une erreur est survenue lors de la transaction. Votre compte n'a pas été débité.");
         });
      }
 

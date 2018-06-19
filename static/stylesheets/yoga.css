@@ -31,21 +31,22 @@
 
 .yoga-panel *{
    color: #574128;
+   text-align: center;
 }
 
 .yoga-panel > h1{
    font-size: 150%;
-   margin-bottom: 5%;
+   margin-bottom: 10px;
 }
 
 .yoga-panel > h2{
    font-size: 120%;
-   margin-bottom: 5%;
+   margin-bottom:  10px;
 }
 
 .yoga-panel > h3{
    font-size: 100%;
-   margin-bottom: 5%;
+   margin-bottom:  10px;
 }
 
 
@@ -55,6 +56,7 @@
 
 .yoga-user-info *{
    color: #574128;
+   text-align: center;
 }
 
 .yoga-user-info h2{
@@ -137,7 +139,7 @@ table a:hover md-icon{
 .pending-reservation-lesson{
   padding : 10px;
  /* margin-top: 30px;*/
-  border: 4px solid #137b72;
+  border: 4px solid #97AB63;
   border-radius: 15px;
   box-shadow: 10px 10px 15px 0px #3f3f3f;
   width:100%;
@@ -215,7 +217,7 @@ table a:hover md-icon{
 }
 
 .transaction-button{
-  margin:20px 45% 0 45%;*/
+  margin:20px 44% 0 44%;
   /*margin:auto;*/
   float:bottom;
 }
@@ -234,3 +236,4 @@ table a:hover md-icon{
    background-color: red;*/
    border-width: medium;
 }
+

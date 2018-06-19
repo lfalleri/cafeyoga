@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from authentication.models import Account
-
+from django.dispatch import receiver
+from datetime import timedelta
 
 class UploadedImage(models.Model):
     image = models.ImageField('Updloaded image')
@@ -21,13 +22,21 @@ class Professeur(models.Model):
     prenom = models.CharField(max_length=32)
     description = models.CharField(max_length=512)
     lien = models.CharField(max_length=128, null=True, blank=True)
-    photo = models.CharField(max_length=128)
+    photo = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
         return ' '.join([self.prenom, self.nom])
 
     def __unicode__(self):
         return ' '.join([self.prenom, self.nom])
+
+
+class LessonManager(models.Manager):
+    def create_lesson(self, type, intensity, animator, date, duration, nb_places, price):
+        lesson = Lesson(type=type, intensity=intensity, animator=animator, date=date, duration=duration, price=price)
+        lesson.save(force_insert=True)
+        return lesson
+
 
 class Lesson(models.Model):
     class Meta:
@@ -59,7 +68,51 @@ class Lesson(models.Model):
 
     type = models.CharField(max_length=30, choices=TYPE_OF_LESSON, default=TYPE_HATHA) # hatha, ashtanga ...
     intensity = models.CharField(max_length=30, choices=INTENSITY_OF_LESSON, default=INTENSITY_BASIQUE)
-    #animator = models.CharField(max_length=30)
+    animator = models.ForeignKey(Professeur, on_delete=models.CASCADE)
+    date = models.DateTimeField()
+    duration = models.IntegerField() # in min
+    nb_places = models.IntegerField(default=10)
+    price = models.IntegerField(default=2) # En points : 1h = 2pts / 1h30 = 3pts
+
+    objects = LessonManager()
+
+    def __unicode__(self):
+        return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+
+    def __str__(self):
+        return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+
+
+class LessonRecurrent(models.Model):
+    class Meta:
+       ordering = ('date',)
+
+    TYPE_HATHA = 'Hatha'
+    TYPE_ASHTANGA = 'Ashtanga'
+    TYPE_VINYASA = 'Vinyasa'
+    TYPE_BIKRAM = 'Bikram'
+    TYPE_OF_LESSON = (
+        (TYPE_HATHA, 'Hatha'),
+        (TYPE_ASHTANGA, 'Ashtanga'),
+        (TYPE_VINYASA, 'Vinyasa'),
+        (TYPE_BIKRAM, 'Bikram'),
+    )
+
+    INTENSITY_DEBUTANT = 'Debutant'
+    INTENSITY_BASIQUE = 'Basique'
+    INTENSITY_INTERMEDIAIRE = 'Intermediaire'
+    INTENSITY_INTENSIF = 'Intensif'
+    INTENSITY_EXPERT = 'Expert'
+    INTENSITY_OF_LESSON = (
+        (INTENSITY_DEBUTANT, 'Debutant'),
+        (INTENSITY_BASIQUE, 'Basique'),
+        (INTENSITY_INTERMEDIAIRE, 'Intermediaire'),
+        (INTENSITY_INTENSIF, 'Intensif'),
+        (INTENSITY_EXPERT, 'Expert'),
+    )
+
+    type = models.CharField(max_length=30, choices=TYPE_OF_LESSON, default=TYPE_HATHA) # hatha, ashtanga ...
+    intensity = models.CharField(max_length=30, choices=INTENSITY_OF_LESSON, default=INTENSITY_BASIQUE)
     animator = models.ForeignKey(Professeur, on_delete=models.CASCADE)
     date = models.DateTimeField()
     duration = models.IntegerField() # in min
@@ -72,6 +125,18 @@ class Lesson(models.Model):
     def __str__(self):
         return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
 
+
+@receiver(models.signals.post_save, sender=LessonRecurrent)
+def create_lessons_from_template(sender, instance, created, *args, **kwargs):
+    if created:
+        for i in range(0,13):
+            Lesson.objects.create_lesson(instance.type,
+                                         instance.intensity,
+                                         instance.animator,
+                                         instance.date + timedelta(days=i*7),
+                                         instance.duration,
+                                         instance.nb_places,
+                                         instance.price)
 
 class ReservationManager(models.Manager):
 

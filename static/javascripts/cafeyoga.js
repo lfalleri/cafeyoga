@@ -12,6 +12,7 @@
       'cafeyoga.yoga',
       'cafeyoga.restaurant',
       'cafeyoga.boutique',
+      'cafeyoga.evenements',
       'cafeyoga.layout',
       'cafeyoga.utils',
     ]);

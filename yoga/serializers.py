@@ -25,7 +25,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ('id', 'type', 'intensity', 'animator', 'date',
-                  'duration', 'nb_places', 'price')
+                  'duration', 'nb_places', 'price', 'recurrent')
 
         def create(self, validated_data):
             return Lesson.objects.create(**validated_data)

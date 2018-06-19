@@ -3,21 +3,21 @@
         <div class="cy-container">
             <div ng-include="'/static/templates/general/navbar.html'"></div>
             <div class="main-container">
-                <div layout layout-align="space-between start" style="">
+                <div layout layout-align="start start" style="">
                     <div layout="column"  flex="30" flex-offset="10" layout-align="space-between center"
                          style="height:100%;padding: 0 20px;">
                         <h2 class="page-title"
                             style="margin-bottom:80px;margin-top: 75px;"> Me connecter </h2>
                         <div hide-gt-md style="width :1px; margin-bottom:75px;"></div>
-                        <form role="form" ng-submit="logi()">
+                        <form role="form">
                             <div class="alert alert-danger" ng-show="login_error" ng-bind="login_error"></div>
                             <div class="form-group">
                                 <label class="quicksand-md" for="login__email">Email</label>
                                 <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                       id="login__email"
                                        name="email"
                                        type="email"
                                        class="form-control"
-                                       id="login__email"
                                        ng-model="login.email"
                                        ng-required="1"
                                        oninvalid="this.setCustomValidity('Champ obligatoire')"
@@ -46,7 +46,7 @@
                         </form>
                     </div>
                     <div layout="column"
-                         flex-offset="5"
+                         flex-offset="10"
                          style="margin-top: 100px;width:5%; min-height: 500px; border-left: 1px solid #3f3f3f;">
                     </div>
 
@@ -55,7 +55,7 @@
                         <h2 class="page-title"
                             style="margin-bottom:80px;margin-top: 75px;"> M'enregistrer </h2>
                         <div hide-gt-md style="width :1px; margin-bottom:75px;"></div>
-                        <form role="form" ng-submit="registe()">
+                        <form role="form">
                             <div class="alert alert-danger" ng-show="register_error" ng-bind="register_error"></div>
                             <div class="form-group">
                                 <label class="quicksand-md" for="register__last_name">Nom</label>
@@ -125,7 +125,7 @@
                                        oninput="setCustomValidity('')"
                                        ng-change="loginForm()" />
                             </div>
-                            <div
+                            <div    ng-if="model.key!==undefined"
                                     vc-recaptcha
                                     theme="'light'"
                                     key="model.key"

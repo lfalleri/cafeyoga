@@ -24,13 +24,22 @@
     $scope.initialize = function() {
        console.log( "ContactController initialize_map");
        var loc = {lat: 48.858713, lng: 2.378991};
-       var map = new google.maps.Map(document.getElementById('map_div'), {
+       var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 16,
           center: loc
        });
        var marker = new google.maps.Marker({
           position: loc,
           map: map
+       });
+
+       var map2 = new google.maps.Map(document.getElementById('map2'), {
+          zoom: 16,
+          center: loc
+       });
+       var marker = new google.maps.Marker({
+          position: loc,
+          map: map2
        });
     }
 

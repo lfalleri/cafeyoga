@@ -67,8 +67,8 @@
   <div hide-gt-md layout="column" class="menu-items" ng-if="displayItemList" flex="100">
     <md-divider ></md-divider>
     <md-list flex class="md-dense">
-      <md-list-item class="md-1-line" ng-repeat="item in itemList" ng-click="clickItem(item)" aria-label="item.title">
-        <md-divider ></md-divider>
+      <md-list-item class="md-1-line" ng-repeat="item in itemList" ng-if="item.display" ng-click="clickItem(item)" aria-label="item.title">
+        <md-divider></md-divider>
         <div class="md-list-item-text" layout="column" layout-align="center start">
           <h5 style="vertical-align: middle;" class="menu-burger-item">{{ item.title }}</h5>
         </div>

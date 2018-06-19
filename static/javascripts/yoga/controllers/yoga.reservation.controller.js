@@ -60,9 +60,10 @@
            alert("Votre réservation a expiré, veuillez recommencer une nouvelle réservation\n");
            YogaService.stagedReservationExit(true, $scope.account, true);
            $scope.reservationSuccessful = false;
+        }else{
+           timer = window.setTimeout(expiredReservation, 1000 * 60  );
         }
         $scope.$apply();
-
      }
 
      $scope.processReservation = function(lesson, account, nb_persons){

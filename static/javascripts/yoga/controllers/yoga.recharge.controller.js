@@ -32,7 +32,7 @@
      /* Test card : */
      $scope.number = "4242-4242-4242-4242";
      $scope.expiry = "12/18";
-     $scope.cvc = "999";
+     $scope.cvc =    "999";
 
      activate();
 
@@ -51,7 +51,7 @@
             $scope.account = value;
             if(angular.equals($scope.account,{})){
                /* If not logged in, just get all the lessons */
-               Authentication.gotoLogin();
+               Authentication.gotoLoginAndBackTo('/yoga/recharge');
             }else{
                YogaService.getAllFormulas(function(success, formules){
                   if(!success){
@@ -136,7 +136,8 @@
      // Stripe Response Handler
      $scope.stripeCallback = function (code, result) {
         if (result.error) {
-            $scope.error = "Une erreur est survenue lors de la transaction. Votre compte n'a pas été débité";
+            $scope.error = "Une erreur est survenue lors de la transaction. Votre compte n'a pas été débité.";
+            console.log("result :",result);
             //window.alert('it failed! error: ' + result.error.message);
         } else {
             $scope.token = result.id;
@@ -176,6 +177,14 @@
         $scope.error = undefined;
      }
 
+     $scope.changeCardFrom = function(){
+        $scope.error = undefined;
+        $scope.success = undefined;
+     }
+
+     $scope.gotoCalendar = function(){
+        $location.url('/yoga/calendrier');
+     }
   };
 
 })();
